@@ -1,6 +1,7 @@
 package towerModels;
 
 import static org.junit.Assert.*;
+
 import org.junit.Test;
 
 public class TowerTest {
@@ -12,13 +13,13 @@ public class TowerTest {
 	
 	@Test
 	public void testTowerCreation() {
-		AerialTower aT = new AerialTower();
-		assertEquals(aT.getDamage(), 2);
+		Tower aT = TowerFactory.createTower(200);
+		assertEquals(aT.getDamage(), 1);
 	}
 	
 	@Test
 	public void testSeeUpGrades() {
-		Tower aT = new AerialTower();
+		Tower aT = TowerFactory.createTower(200);
 		aT.upgrade(0);
 		aT.upgrade(1);
 		aT.upgrade(1);
@@ -35,7 +36,7 @@ public class TowerTest {
 	
 	@Test
 	public void testSimplifiedUpgrade() {
-		Tower aT = new AerialTower();
+		Tower aT = TowerFactory.createTower(200);
 		aT.upgrade(1);
 		aT.upgrade(1);
 		aT.upgrade(2);
@@ -49,7 +50,7 @@ public class TowerTest {
 		assertEquals((int) upgradesTest[1], 18);
 		assertEquals((int) upgradesTest[2], 26);
 		
-		Tower iT = new IceTower();
+		Tower iT = TowerFactory.createTower(100);
 		iT.upgrade(0);
 		iT.upgrade(2);
 		iT.upgrade(2);
@@ -63,7 +64,7 @@ public class TowerTest {
 		assertEquals((int) upgradesTest[1], -1);
 		assertEquals((int) upgradesTest[2], 39);
 		
-		Tower gT = new GroundTower();
+		Tower gT = TowerFactory.createTower(300);
 		gT.upgrade(1);
 		gT.upgrade(1);
 		gT.upgrade(1);
@@ -80,7 +81,7 @@ public class TowerTest {
 	
 	@Test
 	public void testNextUpgrade() {
-		Tower aT = new AerialTower();
+		Tower aT = TowerFactory.createTower(200);
 		aT.upgrade(0);
 		aT.upgrade(2);
 		aT.upgrade(2);
@@ -101,7 +102,7 @@ public class TowerTest {
 	
 	@Test
 	public void testvalue() {
-		Tower aT = new AerialTower();
+		Tower aT = TowerFactory.createTower(200);
 		aT.upgrade(1);
 		aT.upgrade(1);
 		aT.upgrade(2);
@@ -114,7 +115,7 @@ public class TowerTest {
 		assertEquals(value, 36000);
 
 		
-		Tower iT = new IceTower();
+		Tower iT = TowerFactory.createTower(100);
 		iT.upgrade(0);
 		iT.upgrade(2);
 		iT.upgrade(2);
@@ -126,7 +127,7 @@ public class TowerTest {
 		
 		assertEquals(value, 60100);
 		
-		Tower gT = new GroundTower();
+		Tower gT = TowerFactory.createTower(300);
 		gT.upgrade(1);
 		gT.upgrade(1);
 		gT.upgrade(1);
@@ -139,7 +140,7 @@ public class TowerTest {
 		assertEquals(value, 36000);
 		
 		
-		Tower gT2 = new GroundTower();
+		Tower gT2 = TowerFactory.createTower(300);
 		gT2.upgrade(1);
 		gT2.upgrade(1);
 		gT2.upgrade(2);
@@ -158,7 +159,7 @@ public class TowerTest {
 	
 	@Test 
 	public void testSync() {
-		Tower gT2 = new GroundTower();
+		Tower gT2 = TowerFactory.createTower(300);
 		gT2.upgrade(1);
 		gT2.upgrade(1);
 		gT2.upgrade(2);
