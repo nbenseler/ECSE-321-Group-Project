@@ -2,7 +2,8 @@ package towerModels;
 
 import java.util.ArrayList;
 
-public abstract class Tower implements ITower {
+public abstract class Tower {
+	// Variables
 	private int damage;
 	private int buyValue;
 	private int refundValue;
@@ -10,10 +11,10 @@ public abstract class Tower implements ITower {
 	private int power;
 	private int rateOfFire;
 	private ArrayList<Upgrade> upgrades;
-	private Tower currentTower;
 	
 	Tower() {
 		upgrades = new ArrayList<>();
+		// Set null references to first three upgrade indices.
 		upgrades.add(null);
 		upgrades.add(null);
 		upgrades.add(null);
@@ -22,11 +23,6 @@ public abstract class Tower implements ITower {
 	/**
 	 * Sync upgrades with Tower class variables.
 	 */
-	
-
-	public void initialize(Tower t) {
-		this.currentTower = t;
-	}
 	
 	public void sync() {
 		double[] d = seeUpgrades();
@@ -44,7 +40,6 @@ public abstract class Tower implements ITower {
 	 * Calculates the total value of the tower.
 	 */
 	
-
 	public int valueOfTower() {
 		int value = 0;
 		// Add value of damage upgrades
@@ -60,12 +55,11 @@ public abstract class Tower implements ITower {
 	}
 	
 	/**
-	 * Places the value of a particular type of upgrade into each index of currentUpgrades[]. If that
+	 * Places the value of a particular type of upgrade into each index of currentUpgrades. If that
 	 * particular type of upgrade has not yet been instantiated, the value placed into
 	 * the corresponding index is -1. 
 	 */
 	
-
 	public double[] seeUpgrades() {
 		double[] currentUpgrades = new double[3];
 		// Return damage multiplier of damage upgrade.
@@ -87,12 +81,10 @@ public abstract class Tower implements ITower {
 	}
 	
 	/**
-	 * Places the value of the next upgrade into the [][0] index of nextUpgrades.
-	 * Places the cost of the next upgrade into the [][1] index of nextUpgrades. 
+	 * Places the value of a particular type of upgrade into the [][0] index of nextUpgrades.
+	 * Places the cost of a particular type of upgrade into the [][1] index of nextUpgrades. 
 	 */
 	
-
-
 	public double[][] nextUpgrades() {
 		double[][] nextUpgrades = new double[3][2];
 		if (upgrades.get(0) != null) {
@@ -128,8 +120,6 @@ public abstract class Tower implements ITower {
 	 * @param type: 0 -- damage, 1 -- range, 2 -- rateOfFire. 
 	 */
 	
-
-
 	public void upgrade(int type) {
 		assert type >= 0 && type <= 2;
 		
@@ -139,24 +129,24 @@ public abstract class Tower implements ITower {
 			switch (type) {
 				// Instantiate damage upgrade.
 			case 0: 
-				upgrades.set(type, new DamageUpgradeRunTime(currentTower));
+				upgrades.set(type, new DamageUpgradeRunTime());
 				break;
 				// Instantiate range upgrade.
 			case 1:
-				upgrades.set(type, new RangeUpgradeRunTime(currentTower));
+				upgrades.set(type, new RangeUpgradeRunTime());
 				break;
 				// Instantiate rateOfFire upgrade.
 			case 2:
-				upgrades.set(type, new RateOfFireUpgradeRunTime(currentTower));
+				upgrades.set(type, new RateOfFireUpgradeRunTime());
 				break;
 			}
-
 		}
 	}
 	
 	// Getter & Setter Methods
 
 	public int getDamage() {
+		sync();
 		return damage;
 	}
 
@@ -165,6 +155,7 @@ public abstract class Tower implements ITower {
 	}
 	
 	public int getBuyValue() {
+		sync();
 		return buyValue;
 	}
 
@@ -173,6 +164,7 @@ public abstract class Tower implements ITower {
 	}
 
 	public int getRefundValue() {
+		sync();
 		return refundValue;
 	}
 
@@ -181,6 +173,7 @@ public abstract class Tower implements ITower {
 	}
 
 	public int getRange() {
+		sync();
 		return range;
 	}
 
@@ -189,6 +182,7 @@ public abstract class Tower implements ITower {
 	}
 
 	public int getPower() {
+		sync();
 		return power;
 	}
 
@@ -197,6 +191,7 @@ public abstract class Tower implements ITower {
 	}
 
 	public int getRateOfFire() {
+		sync();
 		return rateOfFire;
 	}
 

@@ -1,16 +1,9 @@
 package towerModels;
 
-//import towerModels.Tower;
-
 public abstract class Upgrade {
 	// runningTotal is the current value of all accumulated upgrades of a particular type.
 	int runningTotal;
 	UpgradeSpecifications uS;
-	Tower t;
-	
-	Upgrade(Tower t) {
-		this.t = t;
-	}
 	
 	public double seeUpgrade() {
 		return uS.increaseFactor;
@@ -36,16 +29,7 @@ public abstract class Upgrade {
 		if (uS.upgrade() != null) {
 			uS = uS.upgrade();
 			runningTotal += uS.value;
-			toNotify();
 		}
-	}
-	
-	public void addTower(Tower t) {
-		this.t = t;
-	}
-	
-	public void toNotify() {
-		t.sync();
 	}
 }
 
@@ -56,31 +40,25 @@ public abstract class Upgrade {
 
 class DamageUpgradeRunTime extends Upgrade {
 	
-	DamageUpgradeRunTime(Tower t) {
-		super(t);
+	DamageUpgradeRunTime() {
 		uS = new Level1Damage();
 		runningTotal = uS.value;
-		toNotify();
 	}
 }
 
 class RangeUpgradeRunTime extends Upgrade {
 	
-	RangeUpgradeRunTime(Tower t) {
-		super(t);
+	RangeUpgradeRunTime() {
 		uS = new Level1Range();
 		runningTotal = uS.value;
-		toNotify();
 	}
 }
 
 class RateOfFireUpgradeRunTime extends Upgrade {
 	
-	RateOfFireUpgradeRunTime(Tower t) {
-		super(t);
+	RateOfFireUpgradeRunTime() {
 		uS = new Level1RateOfFire();
 		runningTotal = uS.value;
-		toNotify();
 	}
 }
 
