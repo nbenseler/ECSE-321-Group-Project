@@ -5,8 +5,7 @@ public class Position {
 	
 	private double xPos; //bounded by MAX_X_VAL
 	private double yPos; //bounded by MAX_Y_VAL
-	private double MAX_X_VAL; //based on length input from user
-	private double MAX_Y_VAL; //based on width input from user
+
 	
 	public Position(double xIn, double yIn){
 		
@@ -20,10 +19,9 @@ public class Position {
 	
 	public double getyPos(){
 		return this.yPos;
-	}
+	}	
 	
-	public double shortestDistanceTo(Position compare){
-		
-		return 0.0;
+	public String toString(){
+		return "the Critter's position is: " + "(" + this.xPos + "," + this.yPos + ")";
 	}
 }

@@ -7,6 +7,7 @@ public class Game {
 
 	public static void main(String[] args){
 		runWave(3);
+		
 	}
 	/*The way I have set up my runWave method is so that it first creates a Player Object in order to test if the critter can 
 	 * take away its life points or add money based on the outcome of the wave. Secondly it generates a list of Critter 

@@ -2,6 +2,11 @@ package critterMain;
 
 import java.util.ArrayList;
 
+import observer.AliveObserver;
+import observer.HitPointsObserver;
+import observer.PositionObserver;
+import observer.SpeedObserver;
+
 public class CritterCreator {
 
 	private ArrayList<Critter> listOfCritters = new ArrayList<Critter>();
@@ -17,13 +22,28 @@ public class CritterCreator {
 	 */
 	private void generateCritters(int wave){
 		for(int i = 0; i < numberOfCritters(wave)/3; i ++){
-			listOfCritters.add(new DroidCritter(critterLevel(wave)));
+			DroidCritter dc =  new DroidCritter(critterLevel(wave));
+			dc.addObserver(new AliveObserver());
+			dc.addObserver(new HitPointsObserver());
+			dc.addObserver(new PositionObserver());
+			dc.addObserver(new SpeedObserver());
+			listOfCritters.add(dc);
 		}
 		for(int i = 0; i < numberOfCritters(wave)/3; i ++){
-			listOfCritters.add(new AirCritter(critterLevel(wave)));
+			AirCritter ac =  new AirCritter(critterLevel(wave));
+			ac.addObserver(new AliveObserver());
+			ac.addObserver(new HitPointsObserver());
+			ac.addObserver(new PositionObserver());
+			ac.addObserver(new SpeedObserver());
+			listOfCritters.add(ac);
 		}
 		for(int i = 0; i < numberOfCritters(wave)/3; i ++){
-			listOfCritters.add(new TrooperCritter(critterLevel(wave)));
+			TrooperCritter tc =  new TrooperCritter(critterLevel(wave));
+			tc.addObserver(new AliveObserver());
+			tc.addObserver(new HitPointsObserver());
+			tc.addObserver(new PositionObserver());
+			tc.addObserver(new SpeedObserver());
+			listOfCritters.add(tc);
 		}
 	}
 	

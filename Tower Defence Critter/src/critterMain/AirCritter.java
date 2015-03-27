@@ -6,6 +6,7 @@ public class AirCritter extends Critter{
 	 * also inherits from it's superclass Critter
 	 * @param level
 	 */
+	private Position p;
 	public AirCritter(int level){
 		super(level);
 		editSpeed();
