@@ -53,7 +53,7 @@ public class Frame extends JFrame{			//using JFrame as the basis for the scree/f
 		//this.setUndecorated(true);
 		this.setResizable(true); 							// can be resized
 		this.setVisible(true);						
-		this.setLocationRelativeTo(null); 					// makes the screen pop up in the middle of the screen
+		//this.setLocationRelativeTo(null); 					// makes the screen pop up in the middle of the screen
 		
 		
 		Screen screen = new Screen(this,w,h);				// passes the frame just created to the screen class - also the height and width specified by the user 

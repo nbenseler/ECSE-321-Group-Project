@@ -3,8 +3,14 @@ package Map;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.Scanner;
 
 import javax.swing.JPanel;
 
@@ -32,6 +38,13 @@ public class Screen extends JPanel implements Runnable{						//this extends the 
 	
 	private int numberOfTowers = 6; 	// this integer can be changed to accommodate more tower spots on the map
 	private String validity = "";		// this string will be changed and used to print whether or not a map is valid
+	private int saveMap = 0;
+	private int convertMap = 0;
+	private int isValid = 0;
+	private ArrayList<Integer> convertedRoute = new ArrayList<Integer>();
+	private ArrayList<String> mapNames = new ArrayList<String>();
+	private ArrayList<ArrayList<Integer>> storedMaps = new ArrayList<ArrayList<Integer>>();
+	private MapSquare[][] mapSquareLayout;
 	
 	public Screen(Frame frame, int width, int height)
 	{
@@ -177,8 +190,9 @@ public class Screen extends JPanel implements Runnable{						//this extends the 
 	
 	public void run()
 	{		
-		
 		scene = 0;
+		importMaps();
+		
 			
 		while(true)				// while loop that runs the game
 		{
@@ -193,6 +207,34 @@ public class Screen extends JPanel implements Runnable{						//this extends the 
 			}
 		}
 		
+	}
+	private void importMaps()
+	{
+		File file = new File("Maps.csv");
+		try {
+			Scanner sc = new Scanner(file);						// initializes scanner on file
+			sc.useDelimiter(",");								// specifies new space to be separated by ,
+			while (sc.hasNext())								// loops through to get all entries
+			{
+				ArrayList<Integer> tempMap = new ArrayList<Integer>();
+				String input = new String(sc.nextLine());			// pulls the string as one piece from the csv file
+				String noSpaceInput = input.replaceAll(" +", "");	// removes all spaces 
+				String[] singleEntries = noSpaceInput.split(",");	// creates a sub array split at commas
+				String mapName = singleEntries[0];
+				mapNames.add(mapName);
+				for (int i = 1; i<singleEntries.length; i++)
+				{
+					tempMap.add(Integer.parseInt(singleEntries[i]));
+				}
+				System.out.println("Map should have been added");
+				storedMaps.add(tempMap);
+																	
+			}
+			sc.close();												// scanner closed
+		} catch (FileNotFoundException e) {							// scanner must be in try catch
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public class MouseHeld					// this class checks to see if the mouse is held
@@ -276,27 +318,47 @@ public class Screen extends JPanel implements Runnable{						//this extends the 
 			
 		}
 		public void keyM() {
+			saveMap =0;
+			convertMap = 0;	
+			isValid = 0;// ************** wrong spot put in start game button		
 			scene = 2;				// m goes to map builder
 			
+			
 		}
+		
 
-		public void keyF() {		
-			isValid(roadSquares);	// f checks validity of map
+		public void keyF() {
+			convertRoute(roadSquares);
+			isValid();	// f checks validity of map
 			
 		}
 
-		private void isValid(ArrayList<Integer> roadRoute) {		// this method checks to see if the map entered by the user is valid
-			
-			ArrayList<Integer> convertedRoute = new ArrayList<>();		
+		private void convertRoute(ArrayList<Integer> roadRoute)
+		{
+			if (convertedRoute.isEmpty())
+			{
 			for (int i = 0; i<roadRoute.size(); i+=2)				// this method fills the new array list with the old array list values, but reduced to integers 1,2,3... 
+			{
+					convertedRoute.add((((XgridNumber+4)*roadRoute.get(i))/frameWidth));
+
+					convertedRoute.add((((YgridNumber+4)*roadRoute.get(i+1))/frameHeight));
+					System.out.println(roadRoute.size());
+			}
+
+			}
+		}
+		private void isValid() {		// this method checks to see if the map entered by the user is valid
+					
+			/*for (int i = 0; i<roadRoute.size(); i+=2)				// this method fills the new array list with the old array list values, but reduced to integers 1,2,3... 
 			{
 
 					convertedRoute.add(((XgridNumber+4)*roadRoute.get(i))/frameWidth);
 
 					convertedRoute.add(((YgridNumber+4)*roadRoute.get(i+1))/frameHeight);
 
-			}
-
+			}*/
+			if (isValid == 0)
+			{
 			boolean b = true;			// this boolean decides at the end shows if a map is valid. the for loops try to make b false, if b is true after all testing then the map is valid
 			int greaterX = 0;
 			int greaterY = 0;
@@ -331,19 +393,108 @@ public class Screen extends JPanel implements Runnable{						//this extends the 
 					if (greaterX+greaterY!=1)		// in order for a move to be valid, it must be 1 step in at most 1 direction
 					{
 						b=false;
-						i=roadRoute.size();
+						i=convertedRoute.size();
 					}
+			}
 			
 			if (b == true)
 					{
-						validity = "This map is valid";			// this prints on screen if map is valid
-					}
+						validity = "This map is valid";	// this prints on screen if map is valid
+						System.out.println("ConvertedRoute Size = "+ convertedRoute.size());
+						convertMapSqaures(convertedRoute);							//*************************WRONG PLACE
+						saveMap(convertedRoute,XgridNumber,YgridNumber, "Brennan's Map");
+						isValid =1;
+					} 
 			else
 			{
 				validity = "This map is invalid";				// this prints on screen if map is invalid
 			}
+			}
 			
 		}
-	}
+			
+			
+
+		private void saveMap(ArrayList<Integer> conRoute, int xgridNumber, int ygridNumber, String mapName) 
+		{ 
+			if (saveMap==0)	//needed due to multiple button presses being caught
+			{
+				storedMaps.add(convertedRoute);
+			try {
+				FileWriter fw = new FileWriter("Maps.csv");
+				PrintWriter outputFile = new PrintWriter(fw);
+				mapNames.add(mapName);
+				//for(int i = 0; i<conRoute.size();i++)
+				//outputFile.print(XgridNumber+","+YgridNumber +",");
+				for (int y = 0; y<storedMaps.size();y++)
+				{
+				outputFile.print(mapNames.get(y)+",");
+				outputFile.print(XgridNumber+","+YgridNumber +",");
+				for(Integer a : storedMaps.get(y))
+				//for(int i = 0; i<conRoute.size();i++)
+				{
+					
+				outputFile.print(a+",");
+				//	outputFile.print(conRoute.get(i)+",");
+				}
+				outputFile.println();
+				}
+				outputFile.close();
+				
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			System.out.println("conroute size: " + conRoute.size());
+/*			System.out.println(XgridNumber+" , "+YgridNumber +",");
+			for(int x = 0; x<conRoute.size();x++)
+			{
+				System.out.print(conRoute.get(x) +",");
+			}
+			System.out.println("It Should have saved this data");*/
+			saveMap=1;
+		}
+		}
+
+		private void convertMapSqaures (ArrayList<Integer> conRoute) 
+		{
+			if (convertMap==0)	//needed due to multiple button presses being caught
+			{
+			System.out.println("YGridNumber = " + YgridNumber + " XgridNumber = " + XgridNumber);
+			mapSquareLayout = new MapSquare[YgridNumber][XgridNumber];
+			for (int i =0; i<conRoute.size(); i+=2)
+			{
+				int a = conRoute.get(i+1)-1;
+				int b = conRoute.get(i)-1;
+				System.out.println("conRoute.geti+1 = " + a);
+				System.out.println("conRoute.geti = " + b);
+					mapSquareLayout[conRoute.get(i+1)-1][conRoute.get(i)-1] = new RoadMapSquare(conRoute.get(i)-1, conRoute.get(i+1)-1);
+			}
+			for (int i =0; i<conRoute.size(); i+=2)
+			{
+				if (i ==0)
+				{
+					RoadMapSquare m = (RoadMapSquare) mapSquareLayout[conRoute.get(i+1)-1][conRoute.get(i)-1];
+					m.setNextSquare(mapSquareLayout[conRoute.get(i+5)-1][conRoute.get(i+4)-1]);
+				}
+				else if (i == conRoute.size()-2)
+				{
+					RoadMapSquare m = (RoadMapSquare) mapSquareLayout[conRoute.get(i+1)-1][conRoute.get(i)-1];
+					m.setNextSquare(mapSquareLayout[conRoute.get(3)-1][conRoute.get(2)-1]);
+				}
+				else if (i ==2)
+				{
+					
+				}
+				else
+				{
+					RoadMapSquare m = (RoadMapSquare) mapSquareLayout[conRoute.get(i+1)-1][conRoute.get(i)-1];
+					m.setNextSquare(mapSquareLayout[conRoute.get(i+3)-1][conRoute.get(i+2)-1]);
+				}
+			}
+			convertMap=1;
+		}
+		}
 }
 }
