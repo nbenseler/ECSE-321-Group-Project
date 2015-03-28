@@ -5,7 +5,7 @@ public interface ITower {
 	public double getRange();
 	public double getRateOfFire();
 	public double getSlowingAbility();
-	public boolean getGroundShootingAbility();
-	public boolean getAirShootingAbility();
-	public boolean getIceShootingAbility();
+	public boolean isGroundShootingAbility();
+	public boolean isAerialShootingAbility();
+	public boolean isIceShootingAbility();
 }

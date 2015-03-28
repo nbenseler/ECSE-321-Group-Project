@@ -24,14 +24,14 @@ public abstract class UpgradeDecorator implements ITower {
 	}
 
 	public boolean isGroundShootingAbility() {
-		return tower.getGroundShootingAbility();
+		return tower.isGroundShootingAbility();
 	}
 
 	public boolean isAerialShootingAbility() {
-		return tower.getAerialShootingAbility();
+		return tower.isAerialShootingAbility();
 	}
 
 	public boolean isIceShootingAbility() {
-		return tower.getIceShootingAbility();
+		return tower.isIceShootingAbility();
 	}
 }
