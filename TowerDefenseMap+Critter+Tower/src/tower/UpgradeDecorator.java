@@ -7,14 +7,13 @@ import critter.critter;
 public abstract class UpgradeDecorator implements ITower {
 	protected ITower decoratee;
 	private ITower myReference;
+	private int cost;
 	
-	public UpgradeDecorator(ITower tower) {
+	public UpgradeDecorator(ITower tower, int cost) {
 		this.decoratee = tower;
-	}
-	// this is only called by the upgradeFactory object, thus an upgrade must have been applied...
-	public void myReference(ITower myReference) {
-		this.myReference = myReference;
-		this.notifyObservers(this.myReference);
+		this.cost = cost;
+		this.myReference = this;
+		this.notifyObservers(this);
 	}
 	
 	public double getDamage() {
@@ -31,6 +30,10 @@ public abstract class UpgradeDecorator implements ITower {
 	
 	public double getSlowingAbility() {
 		return decoratee.getSlowingAbility();
+	}
+	
+	public int getValue() {
+		return decoratee.getValue() + cost;
 	}
 
 	public boolean isGroundShootingAbility() {

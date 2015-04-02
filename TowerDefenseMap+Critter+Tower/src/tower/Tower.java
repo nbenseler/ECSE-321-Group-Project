@@ -9,6 +9,7 @@ public abstract class Tower implements ITower {
 	private double range;
 	private double rateOfFire;
 	private double slowingAbility;
+	private int cost;
 	private boolean groundShootingAbility;
 	private boolean airShootingAbility;
 	private boolean iceShootingAbility;
@@ -16,7 +17,7 @@ public abstract class Tower implements ITower {
 	private ITower myReference;
 
 
-	public Tower(double damage, double range, double rateOfFire, double slowingAbility, boolean groundShootingAbility,
+	public Tower(double damage, double range, double rateOfFire, double slowingAbility, int cost, boolean groundShootingAbility,
 			boolean airShootingAbility, boolean iceShootingAbility) {
 
 		this.damage = damage;
@@ -26,13 +27,9 @@ public abstract class Tower implements ITower {
 		this.groundShootingAbility = groundShootingAbility;
 		this.airShootingAbility = airShootingAbility;
 		this.iceShootingAbility = iceShootingAbility;
+		this.cost = cost;
 		this.observerList = new ArrayList<>();
-		this.myReference = null;
-	}
-	
-	// this is only called by the towerFactory object, thus an tower must have been created...
-	public void myReference(ITower myReference) {
-		this.myReference = myReference;
+		this.myReference = this;
 	}
 
 	public double getDamage() {
@@ -51,6 +48,10 @@ public abstract class Tower implements ITower {
 		return slowingAbility;
 	}
 
+	public int getValue() {
+		return cost;
+	}
+
 	public boolean isGroundShootingAbility() {
 		return groundShootingAbility;
 	}
@@ -62,15 +63,15 @@ public abstract class Tower implements ITower {
 	public boolean isIceShootingAbility() {
 		return iceShootingAbility;
 	}
-	
+
 	public void addTowerObserver(ITowerObserver observer) {
 		observerList.add(observer);
 	}
-	
+
 	public void removeTowerObserver(ITowerObserver observer) {
 		observerList.remove(observer);
 	}
-	
+
 	// when an upgrade is applied, the latest upgrade reference is passed through to this point, where all the
 	// the update() method of all observers of the tower are called. The reference of the applied upgrade is provided
 	// as input...
@@ -79,9 +80,6 @@ public abstract class Tower implements ITower {
 			observer.update(myReference);
 		}
 	}
-	
-
-	
 
 }
 

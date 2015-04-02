@@ -6,9 +6,10 @@ import critter.critter;
 
 public class RangeUpgrade extends UpgradeDecorator {
 	private double rangeMultiplyer = 2.0;
+	private static final int cost = 20;
 
 	public RangeUpgrade(ITower tower) {
-		super(tower);
+		super(tower, cost);
 	}
 	
 	@Override

@@ -9,10 +9,24 @@ public class CompositeTower implements ITower {
 	private ArrayList<ITower> towers;
 	private ArrayList<ITowerObserver> observerList;
 	private ITower myReference;
+	private static final int cost = 1000;
 
 	public CompositeTower() {
 		towers = new ArrayList<>();
 		observerList = new ArrayList<>();
+	}
+	
+	public static int getCost() {
+		return cost;
+	}
+	
+	public int getValue() {
+		int valueTotal = 0;
+
+		for (ITower tower : towers) {
+			valueTotal += tower.getValue();
+		}
+		return valueTotal;
 	}
 
 	public void addTower(ITower tower) {

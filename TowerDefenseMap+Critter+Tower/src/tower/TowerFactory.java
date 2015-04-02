@@ -22,19 +22,15 @@ public class TowerFactory {
 		switch (type.toLowerCase()) {
 		case "aerialtower":
 			t = new AerialTower();
-			t.myReference(t);
 			return (ITower) t;
 		case "groundtower":
 			t = new GroundTower();
-			t.myReference(t);
 			return (ITower) t;
 		case "icetower":
 			t = new IceTower();
-			t.myReference(t);
 			return (ITower) t;
 		case "compositetower":
 			t = new CompositeTower();
-			t.myReference(t);
 			return (ITower) t;
 		default:
 			return null;

@@ -21,15 +21,12 @@ public class UpgradeFactory {
 		switch (type.toLowerCase()) {
 		case "damage":
 			t = new DamageUpgrade(tower);
-			t.myReference(t);
 			return t;
 		case "range":
 			t = new RangeUpgrade(tower);
-			t.myReference(t);
 			return t;
 		case "rateoffire":
 			t = new RateOfFireUpgrade(tower);
-			t.myReference(t);
 			return t;
 		default:
 			return null;
