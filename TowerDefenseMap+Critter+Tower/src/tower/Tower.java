@@ -14,7 +14,6 @@ public abstract class Tower implements ITower {
 	private boolean iceShootingAbility;
 	private ArrayList<ITowerObserver> observerList;
 	private ITower myReference;
-	private ArrayList<critter> critterList;
 
 
 	public Tower(double damage, double range, double rateOfFire, double slowingAbility, boolean groundShootingAbility,
@@ -28,7 +27,6 @@ public abstract class Tower implements ITower {
 		this.airShootingAbility = airShootingAbility;
 		this.iceShootingAbility = iceShootingAbility;
 		this.observerList = new ArrayList<>();
-		this.critterList = new ArrayList<critter>();
 		this.myReference = null;
 	}
 	
@@ -82,11 +80,7 @@ public abstract class Tower implements ITower {
 		}
 	}
 	
-	public void changeList(ArrayList<critter> cList)
-	{
-		System.out.println("Critter is in range of tower!!");
-		this.critterList = cList;
-	}
+
 	
 
 }

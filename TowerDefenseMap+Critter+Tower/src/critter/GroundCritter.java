@@ -9,9 +9,10 @@ public class GroundCritter extends critter {
 	public GroundCritter(RoadMapSquare s) {
 		super(s);
 		c=Color.RED;
-		speed = 0.02;
+		speed = 0.04;
 		radius=0.5;
 		damage = 1;
+		healthPoints = 25;
 	}
 	public Color getColor() {
 		return c;

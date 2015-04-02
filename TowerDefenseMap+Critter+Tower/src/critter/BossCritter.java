@@ -12,6 +12,7 @@ public class BossCritter extends critter {
 		speed = 0.02;
 		radius=0.6;
 		damage = 10;
+		healthPoints = 20;
 	}
 	public Color getColor() {
 		return c;

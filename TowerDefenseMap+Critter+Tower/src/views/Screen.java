@@ -22,6 +22,7 @@ import user.Player;
 import critter.AerialCritter;
 import critter.GroundCritter;
 import critter.critter;
+import map.ISquareObserver;
 import map.MapSquare;
 import map.RoadMapSquare;
 import map.TowerMapSquare;
@@ -50,6 +51,10 @@ public class Screen extends JPanel implements Runnable{						//this extends the 
 	private int firstRoadX;
 	private int firstRoadY;
 	private long lastCritter=0;
+	private boolean groundTowerSelected =false;
+	private boolean aerialTowerSelected =false;
+	private boolean iceTowerSelected =false;
+	private boolean compositeTowerSelected =false;
 	
 	//private int Money=500;				// this is the money variable, which keeps track of the players available funds
 	//private int Lives = 10;				// this is the lives variable which keeps track of the players remaining lives 
@@ -69,8 +74,10 @@ public class Screen extends JPanel implements Runnable{						//this extends the 
 	private ArrayList<Integer> convertedRoute = new ArrayList<Integer>();
 	private ArrayList<String> mapNames = new ArrayList<String>();
 	private ArrayList<ArrayList<Integer>> storedMaps = new ArrayList<ArrayList<Integer>>();
-	private MapSquare[][] mapSquareLayout;
-	private ArrayList<critter> critterList = new ArrayList<critter>();
+	private static MapSquare[][] mapSquareLayout;
+	private static ArrayList<critter> critterList = new ArrayList<critter>();
+	private int numberOfCrittersThisWave;
+	private ArrayList<TowerMapSquare> towerList= new ArrayList<TowerMapSquare>();
 	
 	public MapSquare[][] getMapSquareLayout() {
 		return mapSquareLayout;
@@ -81,9 +88,10 @@ public class Screen extends JPanel implements Runnable{						//this extends the 
 		this.mapSquareLayout = mapSquareLayout;
 	}
 	
-	public void RemoveCritterFromScreen(critter c)
+	public static void RemoveCritterFromScreen(critter c)
 	{
-		this.critterList.remove(c);
+		critterList.remove(c);
+		((RoadMapSquare)mapSquareLayout[(int) c.getSquare().getxPosition()][c.getSquare().getyPosition()]).removeCritter(c);
 	}
 
 	public Screen(Frame frame, int width, int height)
@@ -119,7 +127,7 @@ public class Screen extends JPanel implements Runnable{						//this extends the 
 		else if (scene ==2)				// scene 2 is the map creator
 		{
 			m.setVisible(mapNameViewable);
-			this.frame.addMouseListener (new MouseHandler(this));			// this checks for the mouse being used - the mouse used in any other scene is useless
+			//this.frame.addMouseListener (new MouseHandler(this));			// this checks for the mouse being used - the mouse used in any other scene is useless
 			gr.setColor(Color.WHITE);
 			gr.fillRect(0, 0, this.frame.getWidth(), this.frame.getHeight());
 			
@@ -183,6 +191,35 @@ public class Screen extends JPanel implements Runnable{						//this extends the 
 		}
 		else if (scene ==4)				// Load Game Starts
 		{
+			if (groundTowerSelected)
+			{
+				int x=0;			// this draws the boxes for the towers
+				int y = 0;
+				gr.setColor(Color.ORANGE);
+				gr.fillRect((int)(horizontalSizeOfSqures*3.5) + (int)(x*horizontalSizeOfSqures) , (int)((YgridNumber+1.4)*verticalSizeOfSqures +y*verticalSizeOfSqures),  (int)(horizontalSizeOfSqures),verticalSizeOfSqures);
+			}
+			else if (aerialTowerSelected)
+			{
+				int x=0;			// this draws the boxes for the towers
+				int y = 1;
+				gr.setColor(Color.RED);
+				gr.fillRect((int)(horizontalSizeOfSqures*3.5) + (int)(x*horizontalSizeOfSqures) , (int)((YgridNumber+1.4)*verticalSizeOfSqures +y*verticalSizeOfSqures),  (int)(horizontalSizeOfSqures),verticalSizeOfSqures);
+			}
+			else if (iceTowerSelected)
+			{
+				int x=1;			// this draws the boxes for the towers
+				int y = 0;
+				gr.setColor(Color.BLUE);
+				gr.fillRect((int)(horizontalSizeOfSqures*3.5) + (int)(x*horizontalSizeOfSqures) , (int)((YgridNumber+1.4)*verticalSizeOfSqures +y*verticalSizeOfSqures),  (int)(horizontalSizeOfSqures),verticalSizeOfSqures);
+			}
+			else if (compositeTowerSelected)
+			{
+				int x=1;			// this draws the boxes for the towers
+				int y = 1;
+				gr.setColor(Color.gray);
+				gr.fillRect((int)(horizontalSizeOfSqures*3.5) + (int)(x*horizontalSizeOfSqures) , (int)((YgridNumber+1.4)*verticalSizeOfSqures +y*verticalSizeOfSqures),  (int)(horizontalSizeOfSqures),verticalSizeOfSqures);
+			}
+			//this.frame.addMouseListener (new MouseHandler(this));			// this checks for the mouse being used - the mouse used in any other scene is useless
 			for (int x = 0; x<XgridNumber;x++)				// double for loop creates the map
 				for (int y=0; y<YgridNumber; y++)
 				{
@@ -231,7 +268,7 @@ public class Screen extends JPanel implements Runnable{						//this extends the 
 						}
 					}
 			gr.drawString("Towers:", (int)(horizontalSizeOfSqures*3.5), (int)((YgridNumber+1.4)*verticalSizeOfSqures)-1);
-			gr.drawString("LEVEL:", (int)(horizontalSizeOfSqures*XgridNumber)-(2*horizontalSizeOfSqures), (int)((YgridNumber+1.4)*verticalSizeOfSqures)-1);
+			gr.drawString("LEVEL:"+Player.getUniqueInstance().getLevel(), (int)(horizontalSizeOfSqures*XgridNumber)-(2*horizontalSizeOfSqures), (int)((YgridNumber+1.4)*verticalSizeOfSqures)-1);
 			
 			startWave1();
 			//System.out.println("number of critters  = "+critterList.size());
@@ -241,6 +278,29 @@ public class Screen extends JPanel implements Runnable{						//this extends the 
 				//System.out.println("XPostion to start = "+ a.getxPostion());
 				//System.out.println("YPostion to start = "+ a.getyPosition());
 				gr.fillOval((int)(a.getxPostion()*horizontalSizeOfSqures+(1*horizontalSizeOfSqures)), (int)(a.getyPosition()*verticalSizeOfSqures+1.25*verticalSizeOfSqures), (int)(a.getRadius()*horizontalSizeOfSqures), (int)(a.getRadius()*verticalSizeOfSqures));
+			}
+			for (TowerMapSquare a: towerList)
+			{
+				//System.out.println("tower is being told to attack critters");
+				if (a.getT().isAerialShootingAbility()&&a.getT().isGroundShootingAbility())
+				{
+					gr.setColor(Color.gray);
+				}
+				else if(a.getT().isGroundShootingAbility())
+				{
+					gr.setColor(Color.ORANGE);
+				}
+				else if(a.getT().isAerialShootingAbility())
+				{
+					gr.setColor(Color.RED);
+				}
+				else if(a.getT().isIceShootingAbility())
+				{
+					gr.setColor(Color.BLUE);
+				}
+				//System.out.println("X position of square = "+a.getxPosition());
+				//System.out.println("Y position of square = "+a.getyPosition());
+				gr.fill3DRect((int)(a.getxPosition()*horizontalSizeOfSqures+(horizontalSizeOfSqures)), (int)(a.getyPosition()*verticalSizeOfSqures+verticalSizeOfSqures), (int) horizontalSizeOfSqures, (int)(verticalSizeOfSqures), true);
 			}
 			
 			
@@ -282,8 +342,15 @@ public class Screen extends JPanel implements Runnable{						//this extends the 
 			{
 				
 			}
+			for (int x=0; x<((numberOfTowers/2)-1);x++)			//checks if you click in a tower box
+			{
+				for (int y = 0; y<2; y++)
+				{
+					//gr.drawRect((int)(horizontalSizeOfSqures*3.5) + (int)(x*horizontalSizeOfSqures) , (int)((YgridNumber+1.4)*verticalSizeOfSqures +y*verticalSizeOfSqures),  (int)(horizontalSizeOfSqures),verticalSizeOfSqures);
+				}
+			}
 		}
-		if (critterList.size()==0)
+		if (numberOfCrittersThisWave==0)
 		{
 			//System.out.println("Should add critter");
 			//System.out.println("vertical Size of squares = "+verticalSizeOfSqures);
@@ -294,14 +361,15 @@ public class Screen extends JPanel implements Runnable{						//this extends the 
 			newGroundCritter.setxPostion(firstRoadX);
 			newGroundCritter.setyPosition(firstRoadY);
 			critterList.add(newGroundCritter);
+			numberOfCrittersThisWave +=1;
 		}
-		else if (critterList.size()==2)
+		else if (numberOfCrittersThisWave==10)
 		{
 			
 		}
-		else if (Math.abs(System.currentTimeMillis()-lastCritter)>30000)
+		else if (Math.abs(System.currentTimeMillis()-lastCritter)>10000)
 		{
-			if(critterList.size()%2==0)
+			if(numberOfCrittersThisWave%2==0)
 			{
 				lastCritter = System.currentTimeMillis();
 				RoadMapSquare start = (RoadMapSquare)mapSquareLayout[firstRoadX][firstRoadY];
@@ -309,6 +377,7 @@ public class Screen extends JPanel implements Runnable{						//this extends the 
 				newAerialCritter.setxPostion(firstRoadX);
 				newAerialCritter.setyPosition(firstRoadY);
 				critterList.add(newAerialCritter);
+				numberOfCrittersThisWave +=1;
 			}
 			else
 			{
@@ -318,14 +387,16 @@ public class Screen extends JPanel implements Runnable{						//this extends the 
 				newGroundCritter.setxPostion(firstRoadX);
 				newGroundCritter.setyPosition(firstRoadY);
 				critterList.add(newGroundCritter);
+				numberOfCrittersThisWave +=1;
 			}
 			
 		}
-		for (TowerMapSquare a: ITowerSquareList)
+		for (TowerMapSquare a: towerList)
 		{
-			attackCritter();
+			//System.out.println("tower is being told to attack critters");
+			a.attackCritters();
+			
 		}
-		
 	}
 
 	public void run()
@@ -334,13 +405,14 @@ public class Screen extends JPanel implements Runnable{						//this extends the 
 		p.setLevel(1);
 		scene = 0;
 		importMaps();
-		
+		this.frame.addMouseListener (new MouseHandler(this));
+		this.frame.addKeyListener(new KeyHandler(this));
 			
 		while(true)				// while loop that runs the game
 		{
 			horizontalSizeOfSqures = this.frame.getWidth()/(4 + XgridNumber);
 			verticalSizeOfSqures = this.frame.getHeight()/(4 + YgridNumber);
-			this.frame.addKeyListener(new KeyHandler(this));			// this waits for user to input commands through the keyboard
+			//this.frame.addKeyListener(new KeyHandler(this));			// this waits for user to input commands through the keyboard
 			repaint();			// repaints the screen continually
 
 			
@@ -432,6 +504,116 @@ public class Screen extends JPanel implements Runnable{						//this extends the 
 					}
 				}
 			}
+			if (scene ==4)
+			{
+				if (groundTowerSelected||aerialTowerSelected||iceTowerSelected||compositeTowerSelected)
+				{
+					if(e.getXOnScreen() >=horizontalSizeOfSqures && e.getXOnScreen()<= horizontalSizeOfSqures +((XgridNumber)*horizontalSizeOfSqures))
+					{
+						if (e.getYOnScreen() >= verticalSizeOfSqures && e.getYOnScreen()<= verticalSizeOfSqures + (YgridNumber*verticalSizeOfSqures))
+								{
+									int convertedX = (int)(((XgridNumber+4)* e.getXOnScreen()/frameWidth)-1);
+									int convertedY = (int)(((YgridNumber+4)* e.getYOnScreen()/frameHeight)-1);
+									if (mapSquareLayout[convertedX][convertedY]==null)
+									{
+										TowerFactory tfactory = TowerFactory.getInstance();
+										UpgradeFactory ufactory = UpgradeFactory.getInstance();
+										ITower t1=null;
+										if (groundTowerSelected)
+										{
+											t1 = tfactory.newTower("groundtower");
+										}
+										else if(aerialTowerSelected)
+										{
+											t1 = tfactory.newTower("aerialtower");
+										}
+										else if (iceTowerSelected)
+										{
+											t1 = tfactory.newTower("icetower");
+										}
+										else if (compositeTowerSelected)
+										{
+											//t1 = tfactory.newTower("compositetower");						//**BRENNAN
+										}
+										mapSquareLayout[convertedX][convertedY] = new TowerMapSquare(convertedX,convertedY,t1);
+										System.out.println("New Tower Added!!!");
+										towerList.add(((TowerMapSquare)mapSquareLayout[convertedX][convertedY]));
+										subscribeTowerSquareToRoadSquares((TowerMapSquare) mapSquareLayout[convertedX][convertedY]);
+											
+										/*for(int i = Math.max((int)(convertedX-t1.getRange()), 0); i<=Math.min((int)(convertedX+t1.getRange()), mapSquareLayout.length-1);i++)
+										{
+											for (int j=Math.max((int)(convertedY-t1.getRange()),0);j<=Math.min((int)(convertedY+t1.getRange()),mapSquareLayout.length-1);j++)
+												{
+													if(mapSquareLayout[i][j]!=null&&mapSquareLayout[i][j].isRoad())
+													{
+														((RoadMapSquare)mapSquareLayout[i][j]).addObserver(((TowerMapSquare)mapSquareLayout[convertedX][convertedY]));
+									
+													}
+												}
+											}*/
+									}
+								}
+					}
+				}
+				if (mouseDown && hand ==0)
+				{
+					if(e.getXOnScreen() >=(int)(3.5*horizontalSizeOfSqures) && e.getXOnScreen() <=(int)((3.5*horizontalSizeOfSqures)+(2*horizontalSizeOfSqures)))	//<=(int)(3.5*horizontalSizeOfSqures)+(((numberOfTowers/2)-2)*horizontalSizeOfSqures))
+					{
+						if (e.getYOnScreen() >= (int)((YgridNumber+1.4)*verticalSizeOfSqures) && e.getYOnScreen() <= (int)((YgridNumber+1.4)*verticalSizeOfSqures+(2*verticalSizeOfSqures)))
+								{
+									if(e.getXOnScreen()<(int)((3.5*horizontalSizeOfSqures)+horizontalSizeOfSqures))
+									{
+										if (e.getYOnScreen()<(int)((YgridNumber+1.4)*verticalSizeOfSqures+verticalSizeOfSqures)) 
+										{
+											groundTowerSelected = (!groundTowerSelected);
+											aerialTowerSelected = false;
+											iceTowerSelected = false;
+											compositeTowerSelected = false;
+										}
+										else
+										{
+											groundTowerSelected = false;
+											aerialTowerSelected = (!aerialTowerSelected);
+											iceTowerSelected = false;
+											compositeTowerSelected = false;
+										}
+									}
+									else
+									{
+										if (e.getYOnScreen()<(int)((YgridNumber+1.4)*verticalSizeOfSqures+verticalSizeOfSqures)) 
+										{
+											groundTowerSelected = false;
+											aerialTowerSelected = false;
+											iceTowerSelected = (!iceTowerSelected);
+											compositeTowerSelected = false;
+										}
+										else
+										{
+											groundTowerSelected = false;
+											aerialTowerSelected = false;
+											iceTowerSelected = false;
+											compositeTowerSelected = (!compositeTowerSelected);
+										}
+									}
+								}
+					}
+				}
+			}
+		}
+		
+		public void subscribeTowerSquareToRoadSquares(TowerMapSquare t1)
+		{
+			for(int i = Math.max((int)(t1.getxPosition()-t1.getT().getRange()), 0); i<=Math.min((int)(t1.getxPosition()+t1.getT().getRange()), mapSquareLayout.length-1);i++)
+			{
+				for (int j=Math.max((int)(t1.getyPosition()-t1.getT().getRange()),0);j<=Math.min((int)(t1.getyPosition()+t1.getT().getRange()),mapSquareLayout.length-1);j++)
+					{
+						if(mapSquareLayout[i][j]!=null&&mapSquareLayout[i][j].isRoad())
+						{
+							((RoadMapSquare)mapSquareLayout[i][j]).addObserver(((TowerMapSquare)mapSquareLayout[t1.getxPosition()][t1.getyPosition()]));
+		
+						}
+					}
+				}
 		}
 
 
@@ -644,7 +826,8 @@ public class Screen extends JPanel implements Runnable{						//this extends the 
 						{
 							if(mapSquareLayout[i][j]!=null&&mapSquareLayout[i][j].isRoad())
 							{
-								((RoadMapSquare)mapSquareLayout[i][j]).addObserver(t1);
+								((RoadMapSquare)mapSquareLayout[i][j]).addObserver(((TowerMapSquare)mapSquareLayout[xposition][yposition]));
+								towerList.add(((TowerMapSquare)mapSquareLayout[xposition][yposition]));
 			
 							}
 						}
@@ -673,7 +856,8 @@ public class Screen extends JPanel implements Runnable{						//this extends the 
 						{
 							if(mapSquareLayout[i][j]!=null&&mapSquareLayout[i][j].isRoad())
 							{
-								((RoadMapSquare)mapSquareLayout[i][j]).removeObserver(t1);
+								((RoadMapSquare)mapSquareLayout[i][j]).removeObserver(((TowerMapSquare)mapSquareLayout[xposition][yposition]));
+								towerList.remove(((TowerMapSquare)mapSquareLayout[xposition][yposition]));
 			
 							}
 						}
@@ -691,8 +875,9 @@ public class Screen extends JPanel implements Runnable{						//this extends the 
 						{
 							if(mapSquareLayout[i][j]!=null&&mapSquareLayout[i][j].isRoad())
 							{
-								((RoadMapSquare)mapSquareLayout[i][j]).addObserver(t1);
-			
+								//((TowerMapSquare)mapSquareLayout[xposition][yposition]).
+								((RoadMapSquare)mapSquareLayout[i][j]).addObserver(((TowerMapSquare)mapSquareLayout[xposition][yposition]));
+								towerList.add(((TowerMapSquare)mapSquareLayout[xposition][yposition]));
 							}
 						}
 					}
@@ -859,8 +1044,8 @@ public class Screen extends JPanel implements Runnable{						//this extends the 
 					firstRoadX = b;
 					firstRoadY = a;
 				}
-				System.out.println("conRoute.geti+1 = " + a);
-				System.out.println("conRoute.geti = " + b);
+				//System.out.println("conRoute.geti+1 = " + a);
+				//System.out.println("conRoute.geti = " + b);
 					mapSquareLayout[conRoute.get(i)-1][conRoute.get(i+1)-1] = new RoadMapSquare(conRoute.get(i)-1, conRoute.get(i+1)-1);
 			}
 			for (int i =0; i<conRoute.size(); i+=2)

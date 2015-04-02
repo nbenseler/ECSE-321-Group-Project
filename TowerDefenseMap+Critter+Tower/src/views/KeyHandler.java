@@ -20,7 +20,7 @@ public class KeyHandler implements KeyListener{			// this class takes in and int
 	}
 	
 	public void keyPressed(KeyEvent e) {			// pressed every time a key is pressed it produces the event e
-		//System.out.println(e.getKeyCode());		// key in ASCII is printed to the console
+		System.out.println(e.getKeyCode());		// key in ASCII is printed to the console
 		int keyCode = e.getKeyCode();
 		
 		if(keyCode == 27)				// 27 is for the escape key

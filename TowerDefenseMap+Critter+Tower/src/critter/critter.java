@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Color.*;
 
 import user.Player;
+import views.Screen;
 import map.RoadMapSquare;
 public class critter {
 	private RoadMapSquare square;
@@ -30,7 +31,6 @@ public class critter {
 		radius = 0.5;
 		distance = 0.24;
 		damage = 1;
-		healthPoints = 3;
 	}
 	public Color getColor() {
 		return c;
@@ -180,11 +180,16 @@ public class critter {
 		this.radius = radius;
 	}
 
-	public void takeDamage(int damn) {
-		this.healthPoints -= damn;
+	public void takeDamage(int dam) {
+		this.healthPoints -= dam;
 		if (this.healthPoints <= 0) {
-		removeFromLists();
-		}
+		//removeFromLists();
+			System.out.println("Critter Just Died");
+		Screen.RemoveCritterFromScreen(this);
+		} 
+	}
+	public RoadMapSquare getSquare() {
+		return square;
 	}
 	
 	

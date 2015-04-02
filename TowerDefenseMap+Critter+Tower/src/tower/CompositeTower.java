@@ -9,7 +9,6 @@ public class CompositeTower implements ITower {
 	private ArrayList<ITower> towers;
 	private ArrayList<ITowerObserver> observerList;
 	private ITower myReference;
-	private ArrayList<critter> critterList;
 
 	public CompositeTower() {
 		towers = new ArrayList<>();
@@ -113,9 +112,6 @@ public class CompositeTower implements ITower {
 			observer.update(myReference);
 		}
 	}
-	public void changeList(ArrayList<critter> cList)
-	{
-		critterList = cList;
-	}
+
 
 }

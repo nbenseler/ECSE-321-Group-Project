@@ -3,7 +3,6 @@ package map;
 import java.util.ArrayList;
 
 import critter.critter;
-import tower.ISquareObserver;
 import tower.ITower;
 import tower.ITowerObserver;
 
@@ -63,9 +62,9 @@ public class RoadMapSquare extends MapSquare {				// Subclass of mapSquare
 		this.observers = observers;
 	}
 	
-	public void removeObserver(ITower t)
+	public void removeObserver(ISquareObserver towerSquare)
 	{
-		this.observers.remove(t);
+		this.observers.remove(towerSquare);
 	}
 	public void notifyObservers()					// Notifies the observers that a critter has been added to this square
 	{
@@ -95,9 +94,9 @@ public class RoadMapSquare extends MapSquare {				// Subclass of mapSquare
 	public void setyPosition(int yPosition) {
 		this.yPosition = yPosition;
 	}
-	public void addObserver(ITower tower)			// add observers (towers) to the observer list of this square
+	public void addObserver(ISquareObserver towerMapSquare)			// add observers (towers) to the observer list of this square
 	{
-		observers.add(tower);
+		observers.add(towerMapSquare);
 	}
 
 }

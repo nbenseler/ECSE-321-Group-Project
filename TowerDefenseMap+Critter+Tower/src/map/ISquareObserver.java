@@ -1,4 +1,4 @@
-package tower;
+package map;
 
 import java.util.ArrayList;
 

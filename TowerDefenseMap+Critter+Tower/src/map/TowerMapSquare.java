@@ -3,7 +3,6 @@ package map;
 import java.util.ArrayList;
 
 import critter.critter;
-import tower.ISquareObserver;
 import tower.ITowerObserver;
 import tower.ITower;
 
@@ -29,15 +28,33 @@ public class TowerMapSquare extends MapSquare implements ISquareObserver {
 		yPosition = y;
 		road = false;
 		this.t = t;
-		lastShootingTime = 0;
+		lastShootingTime = System.currentTimeMillis();
 		critterList = new ArrayList<>();
+	}
+	public void setxPosition(int xPosition) {
+		this.xPosition = xPosition;
+	}
+	public int getyPosition() {
+		return yPosition;
+	}
+	public void setyPosition(int yPosition) {
+		this.yPosition = yPosition;
+	}
+	public int getxPosition() {
+		return xPosition;
 	}
 	
 	public void attackCritters() {
-		if (Math.abs(lastShootingTime) - System.currentTimeMillis() > 1500)
+		//System.out.println("CritterListSize = "+critterList.size());
+		if (Math.abs(lastShootingTime - System.currentTimeMillis()) > (t.getRateOfFire()*1000))
 		{
+			//System.out.println("REady to shoot at critter; checking if critter list is empty");
 			if (!critterList.isEmpty()) {
+				System.out.println("Critter List is not empty - CurrentSize = "+ critterList.size());
 				critter c = critterList.get(0);
+				System.out.println("Shot first Critter in List");
+				c.takeDamage((int)this.t.getDamage());
+				System.out.println("Shooting at : "+ c);
 				
 				lastShootingTime = System.currentTimeMillis();	
 			}
@@ -47,15 +64,14 @@ public class TowerMapSquare extends MapSquare implements ISquareObserver {
 	
 	
 	
-	public void removeCritterFromTowerSquare(critter c)
+	public void removeCritterFromTowerSquare(critter crit)
 	{
-		this.critterList.remove(c);
-		
+			critterList.remove(crit);
 	}
 
 	@Override
 	public void changeList(ArrayList<critter> critterList) {
-		// TODO Auto-generated method stub
-		
+		this.critterList = critterList;
 	}
+
 }

@@ -40,7 +40,6 @@ public abstract class UpgradeDecorator implements ITower {
 	public boolean isAerialShootingAbility() {
 		return decoratee.isAerialShootingAbility();
 	}
-
 	public boolean isIceShootingAbility() {
 		return decoratee.isIceShootingAbility();
 	}
@@ -49,8 +48,5 @@ public abstract class UpgradeDecorator implements ITower {
 		decoratee.notifyObservers(myReference);
 	}
 	
-	public void changeList(ArrayList<critter> cList)
-	{
-		decoratee.changeList(cList);
-	}
+
 }
