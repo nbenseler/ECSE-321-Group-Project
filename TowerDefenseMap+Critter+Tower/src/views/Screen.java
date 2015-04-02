@@ -16,6 +16,7 @@ import javax.swing.JPanel;
 
 import tower.GroundTower;
 import tower.ITower;
+import tower.IceTower;
 import tower.TowerFactory;
 import tower.UpgradeFactory;
 import user.Player;
@@ -535,22 +536,22 @@ public class Screen extends JPanel implements Runnable{						//this extends the 
 										{
 											//t1 = tfactory.newTower("compositetower");						//**BRENNAN
 										}
-										mapSquareLayout[convertedX][convertedY] = new TowerMapSquare(convertedX,convertedY,t1);
-										System.out.println("New Tower Added!!!");
-										towerList.add(((TowerMapSquare)mapSquareLayout[convertedX][convertedY]));
-										subscribeTowerSquareToRoadSquares((TowerMapSquare) mapSquareLayout[convertedX][convertedY]);
-											
-										/*for(int i = Math.max((int)(convertedX-t1.getRange()), 0); i<=Math.min((int)(convertedX+t1.getRange()), mapSquareLayout.length-1);i++)
+										else
 										{
-											for (int j=Math.max((int)(convertedY-t1.getRange()),0);j<=Math.min((int)(convertedY+t1.getRange()),mapSquareLayout.length-1);j++)
-												{
-													if(mapSquareLayout[i][j]!=null&&mapSquareLayout[i][j].isRoad())
-													{
-														((RoadMapSquare)mapSquareLayout[i][j]).addObserver(((TowerMapSquare)mapSquareLayout[convertedX][convertedY]));
-									
-													}
-												}
-											}*/
+											
+										}
+										if(Player.getUniqueInstance().getMoney()>=(t1.getValue()))
+										{
+											mapSquareLayout[convertedX][convertedY] = new TowerMapSquare(convertedX,convertedY,t1);
+											System.out.println("New Tower Added!!!");
+											towerList.add(((TowerMapSquare)mapSquareLayout[convertedX][convertedY]));
+											Player.getUniqueInstance().setMoney(Player.getUniqueInstance().getMoney()-t1.getValue());
+											subscribeTowerSquareToRoadSquares((TowerMapSquare) mapSquareLayout[convertedX][convertedY]);
+										}
+										else
+										{
+											System.out.println("Not enough Money!!!");
+										}
 									}
 								}
 					}

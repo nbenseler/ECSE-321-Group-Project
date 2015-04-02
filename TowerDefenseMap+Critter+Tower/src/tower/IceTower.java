@@ -17,4 +17,5 @@ public class IceTower extends Tower {
 	public static int getCost() {
 		return cost;
 	}
+	
 }

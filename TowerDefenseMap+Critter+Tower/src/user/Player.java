@@ -13,6 +13,7 @@ public class Player {
 
 	public void setMoney(int money) {
 		this.money = money;
+
 	}
 
 	public int getLives() {
@@ -21,6 +22,11 @@ public class Player {
 
 	public void setLives(int lives) {
 		this.lives = lives;
+		if (this.lives<=0)
+		{
+			System.out.println("GAME OVER!! Come on Professor Sinning, you can do better than that");
+			System.exit(0);
+		}
 	}
 
 	public int getLevel() {
