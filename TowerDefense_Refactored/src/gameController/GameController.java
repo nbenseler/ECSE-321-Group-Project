@@ -18,6 +18,7 @@ public class GameController {
 	private int numberOfCrittersInThisWave;
 	private long timeOfLastCritter;
 	private long timeOfGameStart;
+	private Player player;
 	private MapSquare[][] mapSquares;
 	private ArrayList<RoadMapSquare> roadMapSquareList;
 	private ArrayList<TowerMapSquare> towerMapSquareList;
@@ -37,6 +38,7 @@ public class GameController {
 		towerMapSquareList = new ArrayList<>();
 		timeOfGameStart = System.currentTimeMillis();
 		timeOfLastCritter = 0;
+		player = Player.getUniqueInstance();
 	}
 
 	public void addTower(String type, int xPosition, int yPosition) {
@@ -56,6 +58,8 @@ public class GameController {
 
 		// REMIND NICK THAT THIS URGENTLY NEEDS CHANGING. REMOVE THIS COMMENT ONCE DONE.
 		((TowerMapSquare) mapSquares[xPosition][yPosition]).upgradeTower(type);
+		if (type.toLowerCase().equals("range"))
+			this.addIMapSquareObservers(xPosition, yPosition);
 	}
 
 	private void addIMapSquareObservers(int xPosition, int yPosition) {
@@ -67,6 +71,20 @@ public class GameController {
 			for (int j = (int) Math.max(yPosition - range, 0); j <= Math.min(yPosition + range, mapSquares.length - 1); j++){
 				if (mapSquares[i][j] != null && mapSquares[i][j].getClass() == RoadMapSquare.class) {
 					((RoadMapSquare) mapSquares[i][j]).addIMapSquareObserver((IMapSquareObserver) mapSquares[xPosition][yPosition]);
+				}
+			}
+		}
+	}
+	
+	private void removeIMapSquareObservers(int xPosition, int yPosition) {
+		assert (mapSquares[xPosition][yPosition] != null) && (mapSquares[xPosition][yPosition].getClass() == TowerMapSquare.class);
+
+		double range = ((TowerMapSquare) mapSquares[xPosition][yPosition]).getTower().getRange();
+
+		for (int i = (int) Math.max(xPosition - range, 0); i <= Math.min(xPosition + range, mapSquares.length - 1); i++) {
+			for (int j = (int) Math.max(yPosition - range, 0); j <= Math.min(yPosition + range, mapSquares.length - 1); j++){
+				if (mapSquares[i][j] != null && mapSquares[i][j].getClass() == RoadMapSquare.class) {
+					((RoadMapSquare) mapSquares[i][j]).removeIMapSquareObserver((IMapSquareObserver) mapSquares[xPosition][yPosition]);
 				}
 			}
 		}
@@ -171,7 +189,7 @@ public class GameController {
 				numberOfCrittersInThisWave = 0;
 			}
 		}
-		else if (System.currentTimeMillis() - timeOfLastCritter > 7000 / waveMultiplier)
+		else if (System.currentTimeMillis() - timeOfLastCritter > 20000 / waveMultiplier)
 		{
 			if (numberOfCrittersInThisWave % 2 == 0)
 			{
@@ -201,5 +219,13 @@ public class GameController {
 	{
 		critterList.remove(critter);
 		((RoadMapSquare) mapSquares[(int) critter.getSquare().getxPosition()][critter.getSquare().getyPosition()]).removeCritter(critter);
+	}
+
+	public void sellTower(int towerXPosition,int towerYPosition) {
+		
+		towerMapSquareList.remove(mapSquares[towerXPosition][towerYPosition]);
+		this.removeIMapSquareObservers(towerXPosition, towerYPosition);
+		player.setMoney((int) 0.5*(player.getMoney() + (((TowerMapSquare) mapSquares[towerXPosition][towerYPosition]).getTower().getValue())));
+		mapSquares[towerXPosition][towerYPosition] = null;
 	}
 }

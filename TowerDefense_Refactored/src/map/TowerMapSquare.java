@@ -20,6 +20,7 @@ public class TowerMapSquare extends MapSquare implements IMapSquareObserver {
 	}
 
 	public void upgradeTower(String type) {
+
 		this.tower = UpgradeFactory.getInstance().newUpgrade(type, tower);
 	}
 
@@ -42,6 +43,9 @@ public class TowerMapSquare extends MapSquare implements IMapSquareObserver {
 	public void attackCritters() {
 		if (System.currentTimeMillis() - lastShootingTime > tower.getRateOfFire()*1000) {
 			if (!critterList.isEmpty()) {
+				if (tower.isIceShootingAbility()) {
+					critterList.get(0).setSpeed(critterList.get(0).getSpeed() / tower.getSlowingAbility());
+				}
 				critterList.get(0).takeDamage((int) this.tower.getDamage());
 				lastShootingTime = System.currentTimeMillis();
 			}

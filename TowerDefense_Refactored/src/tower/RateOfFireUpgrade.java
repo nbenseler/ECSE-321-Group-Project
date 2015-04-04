@@ -6,7 +6,7 @@ import critter.Critter;
 
 public class RateOfFireUpgrade extends UpgradeDecorator {
 	private double rateOfFireMultiplyer = 1.2;
-	private static final int cost = 10;
+	public static final int cost = 10;
 	
 
 	public RateOfFireUpgrade(ITower tower) {
@@ -15,7 +15,8 @@ public class RateOfFireUpgrade extends UpgradeDecorator {
 	
 	@Override
 	public double getRateOfFire() {
-		return decoratee.getRateOfFire()*rateOfFireMultiplyer;
+		return decoratee.getRateOfFire()/rateOfFireMultiplyer;
 	}
+
 
 }

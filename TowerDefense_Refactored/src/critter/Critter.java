@@ -156,7 +156,8 @@ public class Critter {
 	}
 
 	public void setSpeed(double speed) {
-		this.speed = speed;
+		this.speed = Math.max(speed, 0.02);
+		System.out.println("The CurrentCritter Speed = " +this.speed);
 	}
 
 	public double getxPosition() {
@@ -179,9 +180,6 @@ public class Critter {
 		return speed;
 	}
 
-	public void setSpeed(int speed) {
-		this.speed = speed;
-	}
 
 	public double getRadius() {
 		return radius;

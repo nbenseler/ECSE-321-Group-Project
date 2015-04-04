@@ -79,10 +79,22 @@ public class KeyHandler implements KeyListener{			// this class takes in and int
 		{
 			this.keyTyped.key9();
 		}
-		if (keyCode == 85)				// 57 is 9
+
+		if (keyCode == 68)				// 57 is 9
 		{
-			this.keyTyped.keyU();
+			this.keyTyped.keyD();
 		}
+
+		if (keyCode == 82)				// 57 is 9
+		{
+			this.keyTyped.keyR();
+		}
+		
+		if (keyCode == 83)				// 57 is 9
+		{
+			this.keyTyped.keyS();
+		}
+
 
 	}
 

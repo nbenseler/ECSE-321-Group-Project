@@ -6,7 +6,7 @@ import critter.Critter;
 
 public class DamageUpgrade extends UpgradeDecorator {
 	private double damageMultiplyer = 1.2;
-	private static final int cost = 30;
+	public static final int cost = 30;
 
 	public DamageUpgrade(ITower tower) {
 		super(tower, cost);
@@ -17,5 +17,4 @@ public class DamageUpgrade extends UpgradeDecorator {
 		return decoratee.getDamage()*damageMultiplyer;
 	}
 
-	
 }

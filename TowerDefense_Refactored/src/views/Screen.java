@@ -18,9 +18,12 @@ import javax.swing.JPanel;
 
 import tower.AerialTower;
 import tower.CompositeTower;
+import tower.DamageUpgrade;
 import tower.GroundTower;
 import tower.ITower;
 import tower.IceTower;
+import tower.RangeUpgrade;
+import tower.RateOfFireUpgrade;
 import tower.TowerFactory;
 import tower.UpgradeFactory;
 import user.Player;
@@ -73,6 +76,9 @@ public class Screen extends JPanel implements Runnable{						//this extends the 
 	private ArrayList<ArrayList<Integer>> storedMaps = new ArrayList<ArrayList<Integer>>();
 	private GameController gameController;
 	private Player player;
+	private int towerSelectedForUpgradeOrSaleX;
+	private int towerSelectedForUpgradeOrSaleY;
+	private boolean towerSelectedForUpgradeOrSale;
 
 	public Screen(Frame frame, int numberOfColumns, int numberOfRows)
 	{
@@ -394,19 +400,19 @@ public class Screen extends JPanel implements Runnable{						//this extends the 
 
 							if (gameController.getMapSquares()[convertedX][convertedY] == null)
 							{
-								if (groundTowerSelected && player.getMoney() >= GroundTower.getCost())
+								if (groundTowerSelected && player.getMoney() >= GroundTower.cost)
 								{
 									gameController.addTower("groundTower", convertedX, convertedY);
 								}
-								else if(aerialTowerSelected && player.getMoney() >= AerialTower.getCost())
+								else if(aerialTowerSelected && player.getMoney() >= AerialTower.cost)
 								{
 									gameController.addTower("aerialTower", convertedX, convertedY);
 								}
-								else if (iceTowerSelected && player.getMoney() >= IceTower.getCost())
+								else if (iceTowerSelected && player.getMoney() >= IceTower.cost)
 								{
 									gameController.addTower("iceTower", convertedX, convertedY);
 								}
-								else if (compositeTowerSelected && player.getMoney() >= CompositeTower.getCost())
+								else if (compositeTowerSelected && player.getMoney() >= CompositeTower.cost)
 								{
 									// t1 = tfactory.newTower("compositetower");						// **BRENNAN**
 								}
@@ -415,12 +421,49 @@ public class Screen extends JPanel implements Runnable{						//this extends the 
 						}
 					}
 				}
+				else
+				{
+					if(e.getXOnScreen() >=horizontalSizeOfSqures && e.getXOnScreen()<= horizontalSizeOfSqures +((numberOfColumns)*horizontalSizeOfSqures))
+					{
+						if (e.getYOnScreen() >= verticalSizeOfSqures && e.getYOnScreen()<= verticalSizeOfSqures + (numberOfRows*verticalSizeOfSqures))
+						{
+							int convertedX = (int)(((numberOfColumns+4)* e.getXOnScreen()/frameWidth)-1);
+							int convertedY = (int)(((numberOfRows+4)* e.getYOnScreen()/frameHeight)-1);
+							if  (gameController.getMapSquares()[convertedX][convertedY]!=null && gameController.getMapSquares()[convertedX][convertedY].getClass()==TowerMapSquare.class)
+							{
+								towerSelectedForUpgradeOrSaleX = convertedX;
+								towerSelectedForUpgradeOrSaleY = convertedY;
+								towerSelectedForUpgradeOrSale = true;
+								System.out.println("You Selected a tower MapSquare to be upgraded");
+
+							}
+							else
+							{
+								towerSelectedForUpgradeOrSale = false;
+								System.out.println("You Un-Selected a tower MapSquare to be upgraded");
+							}
+
+						}
+						else 
+						{
+							towerSelectedForUpgradeOrSale = false;
+							System.out.println("You Un-Selected a tower MapSquare to be upgraded");
+						}
+					}
+					else 
+					{
+						towerSelectedForUpgradeOrSale = false;
+						System.out.println("You Un-Selected a tower MapSquare to be upgraded");
+					}
+				}
 				if (mouseDown && hand ==0)
 				{
 					if(e.getXOnScreen() >=(int)(3.5*horizontalSizeOfSqures) && e.getXOnScreen() <=(int)((3.5*horizontalSizeOfSqures)+(2*horizontalSizeOfSqures)))	//<=(int)(3.5*horizontalSizeOfSqures)+(((numberOfTowers/2)-2)*horizontalSizeOfSqures))
 					{
 						if (e.getYOnScreen() >= (int)((numberOfRows+1.4)*verticalSizeOfSqures) && e.getYOnScreen() <= (int)((numberOfRows+1.4)*verticalSizeOfSqures+(2*verticalSizeOfSqures)))
 						{
+							towerSelectedForUpgradeOrSale = false;
+							System.out.println("You Un-Selected a tower MapSquare to be upgraded");
 							if(e.getXOnScreen()<(int)((3.5*horizontalSizeOfSqures)+horizontalSizeOfSqures))
 							{
 								if (e.getYOnScreen()<(int)((numberOfRows+1.4)*verticalSizeOfSqures+verticalSizeOfSqures)) 
@@ -490,9 +533,20 @@ public class Screen extends JPanel implements Runnable{						//this extends the 
 		}
 
 		public void keyF() {
-
-			convertRoute(roadSquares);
-			isValid();	// f checks validity of map
+			if(scene ==2)
+			{
+				convertRoute(roadSquares);
+				isValid();	// f checks validity of map
+			}
+			
+			if(scene==4 && towerSelectedForUpgradeOrSale && player.getMoney()>=RateOfFireUpgrade.cost)
+			{
+				System.out.println("Towers initial frequency of fire = "+ ((TowerMapSquare)(gameController.getMapSquares()[towerSelectedForUpgradeOrSaleX][towerSelectedForUpgradeOrSaleY])).getTower().getRateOfFire());
+				gameController.upgradeTower("rateOfFire", towerSelectedForUpgradeOrSaleX, towerSelectedForUpgradeOrSaleY);
+				System.out.println("Your TOWER has been rate of Fire upgraded at position ("+towerSelectedForUpgradeOrSaleX+","+towerSelectedForUpgradeOrSaleY+")");
+				System.out.println("Towers New rateOfFire = "+ ((TowerMapSquare)(gameController.getMapSquares()[towerSelectedForUpgradeOrSaleX][towerSelectedForUpgradeOrSaleY])).getTower().getRateOfFire());
+				player.setMoney(player.getMoney()- RateOfFireUpgrade.cost);
+			}
 		}
 
 		public void keyL() {
@@ -644,8 +698,35 @@ public class Screen extends JPanel implements Runnable{						//this extends the 
 			}
 		}
 
-		public void keyU() {
-			// TO-DO **
+		public void keyD() {
+			if(scene==4 && towerSelectedForUpgradeOrSale && player.getMoney()>=DamageUpgrade.cost)
+			{
+				System.out.println("Towers initial damage = "+ ((TowerMapSquare)(gameController.getMapSquares()[towerSelectedForUpgradeOrSaleX][towerSelectedForUpgradeOrSaleY])).getTower().getDamage());
+				gameController.upgradeTower("damage", towerSelectedForUpgradeOrSaleX, towerSelectedForUpgradeOrSaleY);
+				System.out.println("Your TOWER has been damamge upgraded at position ("+towerSelectedForUpgradeOrSaleX+","+towerSelectedForUpgradeOrSaleY+")");
+				System.out.println("Towers New damage = "+ ((TowerMapSquare)(gameController.getMapSquares()[towerSelectedForUpgradeOrSaleX][towerSelectedForUpgradeOrSaleY])).getTower().getDamage());
+				player.setMoney(player.getMoney()- DamageUpgrade.cost);
+			}
+		}
+
+		public void keyR() {
+			if(scene==4 && towerSelectedForUpgradeOrSale && player.getMoney()>=RangeUpgrade.cost)
+			{
+				System.out.println("Towers initial range = "+ ((TowerMapSquare)(gameController.getMapSquares()[towerSelectedForUpgradeOrSaleX][towerSelectedForUpgradeOrSaleY])).getTower().getRange());
+				gameController.upgradeTower("range", towerSelectedForUpgradeOrSaleX, towerSelectedForUpgradeOrSaleY);
+				System.out.println("Your TOWER has been range upgraded at position ("+towerSelectedForUpgradeOrSaleX+","+towerSelectedForUpgradeOrSaleY+")");
+				System.out.println("Towers New range = "+ ((TowerMapSquare)(gameController.getMapSquares()[towerSelectedForUpgradeOrSaleX][towerSelectedForUpgradeOrSaleY])).getTower().getRange());
+				player.setMoney(player.getMoney()- RangeUpgrade.cost);
+			}
+		}
+		
+		public void keyS() {
+			if(scene==4 && towerSelectedForUpgradeOrSale)
+			{
+				System.out.println("Towers being sold");
+				gameController.sellTower(towerSelectedForUpgradeOrSaleX,towerSelectedForUpgradeOrSaleY);
+				
+			}
 		}
 
 

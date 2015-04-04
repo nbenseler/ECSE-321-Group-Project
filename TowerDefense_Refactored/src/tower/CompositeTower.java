@@ -9,15 +9,11 @@ public class CompositeTower implements ITower {
 	private ArrayList<ITower> towers;
 	private ArrayList<ITowerObserver> observerList;
 	private ITower myReference;
-	private static final int cost = 1000;
+	public static final int cost = 1000;
 
 	public CompositeTower() {
 		towers = new ArrayList<>();
 		observerList = new ArrayList<>();
-	}
-	
-	public static int getCost() {
-		return cost;
 	}
 	
 	public int getValue() {
