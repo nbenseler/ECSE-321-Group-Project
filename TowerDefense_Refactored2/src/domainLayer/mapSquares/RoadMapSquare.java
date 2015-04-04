@@ -1,0 +1,68 @@
+package domainLayer.mapSquares;
+
+import java.util.ArrayList;
+
+import domainLayer.critter.Critter;
+
+public class RoadMapSquare extends MapSquare {
+	private ArrayList<IMapSquareObserver> mapSquareObservers;
+	private ArrayList<Critter> critterList;
+	private RoadMapSquare nextRoadMapSquare;
+	private int positionInRoad;
+
+	public int getPositionInRoad() {
+		return positionInRoad;
+	}
+	
+	public void setPositionInRoad(int positionInRoad) {
+		this.positionInRoad = positionInRoad;
+	}
+
+	public RoadMapSquare() {
+		super();
+		this.positionInRoad = 0;
+		mapSquareObservers = new ArrayList<>();
+		critterList = new ArrayList<>();
+	}
+
+	public void addIMapSquareObserver(IMapSquareObserver mapSquareObserver) {
+		if (!this.mapSquareObservers.contains(mapSquareObserver)) {
+			this.mapSquareObservers.add(mapSquareObserver);
+			this.notifyObservers();
+		}
+	}
+
+	public void removeIMapSquareObserver(IMapSquareObserver mapSquareObserver) {
+		this.mapSquareObservers.remove(mapSquareObserver);
+	}
+
+	public void notifyObservers() {
+		for (IMapSquareObserver o : mapSquareObservers) {
+			o.update(critterList);
+		}
+	}
+	
+
+	public void addCritter(Critter critter) {
+		critterList.add(critter);
+		for (IMapSquareObserver o : mapSquareObservers) {
+			o.addCritter(critter);
+		}
+	}
+
+	public void removeCritter(Critter critter) {
+		critterList.remove(critter);
+		for (IMapSquareObserver o : mapSquareObservers) {
+			o.removeCritter(critter);
+		}
+	}
+
+	public void setNextRoadMapSquare(RoadMapSquare nextRoadMapSquare) {
+		this.nextRoadMapSquare = nextRoadMapSquare;
+	}
+
+	public RoadMapSquare getNextRoadMapSquare() {
+		return this.nextRoadMapSquare;
+	}
+
+}
