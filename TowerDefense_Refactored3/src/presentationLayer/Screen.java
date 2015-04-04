@@ -417,9 +417,11 @@ public class Screen extends JPanel implements Runnable, IPlayerObserver {						/
 								}
 								else if (compositeTowerSelected && money >= CompositeTower.cost)
 								{
-									// t1 = tfactory.newTower("compositetower");						// **BRENNAN**
+									gameController.addTower("compositetower", convertedX, convertedY);						// **BRENNAN**
+									gameController.addTowerToComposite("aerialTower", convertedX, convertedY);
+									gameController.addTowerToComposite("iceTower", convertedX, convertedY);
+									System.out.println("New Tower Added!!!");
 								}
-								System.out.println("New Tower Added!!!");
 							}
 						}
 					}

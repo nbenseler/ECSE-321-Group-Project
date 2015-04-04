@@ -4,13 +4,18 @@ import java.util.ArrayList;
 
 import domainLayer.controllers.GameController;
 import domainLayer.critter.AerialCritter;
+import domainLayer.critter.AerialCritter2;
 import domainLayer.critter.Critter;
 import domainLayer.critter.GroundCritter;
+import domainLayer.critter.GroundCritter2;
 import domainLayer.mapSquares.IMapSquareObserver;
 import domainLayer.mapSquares.MapSquare;
 import domainLayer.mapSquares.RoadMapSquare;
 import domainLayer.mapSquares.TowerMapSquare;
 import domainLayer.player.Player;
+import domainLayer.towers.CompositeTower;
+import domainLayer.towers.ITower;
+import domainLayer.towers.TowerFactory;
 import domainLayer.towers.strategys.*;
 
 public class GameController {
@@ -201,18 +206,16 @@ public class GameController {
 			if (numberOfCrittersInThisWave % 2 == 0)
 			{
 				timeOfLastCritter = System.currentTimeMillis();
-				RoadMapSquare start = roadMapSquareList.get(0);
-				AerialCritter newAerialCritter = new AerialCritter(start);
-				critterList.add(newAerialCritter);
+				critterList.add(new AerialCritter(roadMapSquareList.get(0)));
+				critterList.add(new AerialCritter2(roadMapSquareList.get(0)));
 				numberOfCrittersInThisWave++;
 			}
 			
 			else
 			{
 				timeOfLastCritter = System.currentTimeMillis();
-				RoadMapSquare start = roadMapSquareList.get(0);
-				GroundCritter newGroundCritter = new GroundCritter(start);
-				critterList.add(newGroundCritter);
+				critterList.add(new GroundCritter(roadMapSquareList.get(0)));
+				critterList.add(new GroundCritter2(roadMapSquareList.get(0)));
 				numberOfCrittersInThisWave++;
 			}
 
@@ -247,4 +250,12 @@ public class GameController {
 			towerMapSquare.setAttackStrategy(strategy);
 		}
 	}
+	
+	public void addTowerToComposite(String type, int xPosition, int yPosition) {
+		ITower tower = TowerFactory.getInstance().newTower(type);
+		if (tower != null)
+			((CompositeTower) ((TowerMapSquare) mapSquares[xPosition][yPosition]).getTower()).addTower(tower);
+		this.addIMapSquareObservers(xPosition, yPosition);
+	}
 }
+

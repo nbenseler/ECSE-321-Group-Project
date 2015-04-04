@@ -4,14 +4,15 @@ import java.awt.Color;
 
 import domainLayer.mapSquares.RoadMapSquare;
 
-public class GroundCritter extends Critter {
+public class GroundCritter2 extends Critter {
+
 	private Color c;	
 	
-	public GroundCritter(RoadMapSquare s) {
+	public GroundCritter2(RoadMapSquare s) {
 		super(s);
 		c = Color.ORANGE;
-		speed = 0.0625;
-		radius = 0.5;
+		speed = 0.05;
+		radius = 0.6;
 		damage = 2;
 		healthPoints = 25;
 		monetaryValue = 15;

@@ -8,8 +8,7 @@ public class CompositeTower implements ITower {
 
 	private ArrayList<ITower> towers;
 	private ArrayList<ITowerObserver> observerList;
-	private ITower myReference;
-	public static final int cost = 1000;
+	public static final int cost = 100;
 
 	public CompositeTower() {
 		towers = new ArrayList<>();
@@ -27,16 +26,12 @@ public class CompositeTower implements ITower {
 
 	public void addTower(ITower tower) {
 		towers.add(tower);
-		this.notifyObservers(this.myReference);
+		this.notifyObservers(this);
 	}
 
 	public void removeTower(ITower tower) {
 		towers.remove(tower);
-		this.notifyObservers(this.myReference);
-	}
-
-	public void myReference(ITower myReference) {
-		this.myReference = myReference;
+		this.notifyObservers(this);
 	}
 	
 	@Override

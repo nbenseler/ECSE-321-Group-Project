@@ -8,7 +8,7 @@ public class AerialCritter extends Critter {
 
 	public AerialCritter(RoadMapSquare s) {
 		super(s);
-		c=Color.ORANGE;
+		c=Color.RED;
 		speed = 0.05;
 		radius = 0.6;
 		distance = 0.20;
