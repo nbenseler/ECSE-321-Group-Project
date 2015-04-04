@@ -4,10 +4,8 @@ import java.awt.Color;
 
 import domainLayer.mapSquares.RoadMapSquare;
 
-public class AerialCritter2 extends Critter {
+public class AerialCritter2 extends AerialCritter {
 
-	private Color c;	
-	
 	public AerialCritter2(RoadMapSquare s) {
 		super(s);
 		c = Color.RED;
@@ -17,7 +15,5 @@ public class AerialCritter2 extends Critter {
 		healthPoints = 25;
 		monetaryValue = 15;
 	}
-	public Color getColor() {
-		return c;
-	}
+
 }

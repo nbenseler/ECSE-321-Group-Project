@@ -17,7 +17,7 @@ public class AerialCritter extends Critter {
 		monetaryValue = 20;
 	}
 
-	private Color c;
+	protected Color c;
 	public Color getColor() {
 		return c;
 	}

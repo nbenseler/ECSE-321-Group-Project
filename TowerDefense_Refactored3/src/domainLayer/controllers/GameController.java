@@ -4,9 +4,11 @@ import java.util.ArrayList;
 
 import domainLayer.controllers.GameController;
 import domainLayer.critter.AerialCritter;
+import domainLayer.critter.AerialCritter1;
 import domainLayer.critter.AerialCritter2;
 import domainLayer.critter.Critter;
 import domainLayer.critter.GroundCritter;
+import domainLayer.critter.GroundCritter1;
 import domainLayer.critter.GroundCritter2;
 import domainLayer.mapSquares.IMapSquareObserver;
 import domainLayer.mapSquares.MapSquare;
@@ -185,9 +187,7 @@ public class GameController {
 			if (System.currentTimeMillis() - timeOfGameStart > 10000)
 			{
 				timeOfLastCritter = System.currentTimeMillis();
-				RoadMapSquare start = roadMapSquareList.get(0);
-				GroundCritter newGroundCritter = new GroundCritter(start);
-				critterList.add(newGroundCritter);
+				critterList.add(new GroundCritter1(roadMapSquareList.get(0)));
 				numberOfCrittersInThisWave += 1;
 			}
 		}
@@ -206,7 +206,7 @@ public class GameController {
 			if (numberOfCrittersInThisWave % 2 == 0)
 			{
 				timeOfLastCritter = System.currentTimeMillis();
-				critterList.add(new AerialCritter(roadMapSquareList.get(0)));
+				critterList.add(new AerialCritter1(roadMapSquareList.get(0)));
 				critterList.add(new AerialCritter2(roadMapSquareList.get(0)));
 				numberOfCrittersInThisWave++;
 			}
@@ -214,7 +214,7 @@ public class GameController {
 			else
 			{
 				timeOfLastCritter = System.currentTimeMillis();
-				critterList.add(new GroundCritter(roadMapSquareList.get(0)));
+				critterList.add(new GroundCritter1(roadMapSquareList.get(0)));
 				critterList.add(new GroundCritter2(roadMapSquareList.get(0)));
 				numberOfCrittersInThisWave++;
 			}
@@ -236,7 +236,7 @@ public class GameController {
 		
 		towerMapSquareList.remove(mapSquares[towerXPosition][towerYPosition]);
 		this.removeIMapSquareObservers(towerXPosition, towerYPosition);
-		player.setMoney((int) 0.5*(player.getMoney() + (((TowerMapSquare) mapSquares[towerXPosition][towerYPosition]).getTower().getValue())));
+		player.setMoney((int) (player.getMoney() + (0.5*((TowerMapSquare) mapSquares[towerXPosition][towerYPosition]).getTower().getValue())));
 		mapSquares[towerXPosition][towerYPosition] = null;
 	}
 	

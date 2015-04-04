@@ -2,16 +2,21 @@ package domainLayer.towers.strategys;
 
 import java.util.ArrayList;
 
+import domainLayer.critter.AerialCritter;
 import domainLayer.critter.Critter;
+import domainLayer.critter.GroundCritter;
+import domainLayer.towers.ITower;
 
 public class AttackFurthestCritter implements IAttackStrategy {
 
 	@Override
-	public Critter attackCritter(ArrayList<Critter> critterList) {
+	public Critter attackCritter(ArrayList<Critter> critterList, ITower tower) {
 		int furthestCritterPosition = -1;
 		Critter furthestCritterSoFar = null;
 		for (Critter critter : critterList) {
-			if (critter.getSquare().getPositionInRoad() > furthestCritterPosition) {
+			if ((tower.isAerialShootingAbility() && (AerialCritter.class.isInstance(critter))) || ((tower.isGroundShootingAbility() && GroundCritter.class.isInstance(critter)))||(tower.isIceShootingAbility()))
+			{
+				//if (critter.getSquare().getPositionInRoad() > furthestCritterPosition) {
 				furthestCritterSoFar = critter;
 				furthestCritterPosition = critter.getSquare().getPositionInRoad();
 			}

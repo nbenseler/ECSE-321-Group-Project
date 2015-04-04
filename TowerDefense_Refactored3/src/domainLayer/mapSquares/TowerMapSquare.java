@@ -54,9 +54,17 @@ public class TowerMapSquare extends MapSquare implements IMapSquareObserver {
 		if (System.currentTimeMillis() - lastShootingTime > (1 / tower.getRateOfFire())*1000) {
 			if (!critterList.isEmpty()) {
 				if (tower.isIceShootingAbility()) {
-					attackStrategy.attackCritter(critterList).setSpeed(critterList.get(0).getSpeed() / tower.getSlowingAbility());
+					Critter critterToIceAttack = attackStrategy.attackCritter(critterList, tower);
+					if (critterToIceAttack!=null)
+					{
+							critterToIceAttack.setSpeed(critterList.get(0).getSpeed() / tower.getSlowingAbility());
+					}
 				}
-				attackStrategy.attackCritter(critterList).takeDamage((int) tower.getDamage());
+				Critter critterToAttack = attackStrategy.attackCritter(critterList, tower);
+				if (critterToAttack != null)
+				{
+				critterToAttack.takeDamage((int) tower.getDamage());
+				}
 				lastShootingTime = System.currentTimeMillis();
 			}
 		}
