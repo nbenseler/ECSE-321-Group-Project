@@ -299,6 +299,7 @@ public class Screen extends JPanel implements Runnable{						//this extends the 
 		{
 			horizontalSizeOfSqures = this.frame.getWidth()/(4 + numberOfColumns);
 			verticalSizeOfSqures = this.frame.getHeight()/(4 + numberOfRows);
+			gameController.setHorizontalAndVerticalSizeOfSquares(horizontalSizeOfSqures, verticalSizeOfSqures);
 			repaint();			// repaints the screen continually
 			try {
 				Thread.sleep(40);					// this causes a pause so that it does not update the screen so quickly 

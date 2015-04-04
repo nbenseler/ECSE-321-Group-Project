@@ -27,6 +27,7 @@ public class Critter {
 	protected int monetaryValue;
 	protected GameController gameController;
 	protected Player player;
+	private boolean speedChanged;
 
 	public Critter(RoadMapSquare s)
 	{
@@ -40,6 +41,7 @@ public class Critter {
 		this.yPosition = s.getyPosition();
 		gameController = GameController.getInstance();
 		player = Player.getUniqueInstance();
+		speedChanged=false;
 	}
 
 	public Color getColor() {
@@ -52,11 +54,12 @@ public class Critter {
 
 	public void setSteps(int steps) {
 		this.steps = steps;
+		distance=distance-speed;
 	}
 
 	public void checkDirection()
 	{
-		if (firstTime == true)
+/*		if (firstTime == true)
 		{
 			distance = 0.24;
 			square.addCritter(this);
@@ -64,10 +67,14 @@ public class Critter {
 		else
 		{
 			distance =1.0;
-		}
+		}*/
 
-		if(steps*speed >=(distance))
+		//if(steps*speed >=(distance))
+		if (distance<=0)
 		{
+			distance=1.0;
+			System.out.println("checking next square");
+			speedChanged = false;
 			firstTime = false;
 			steps = 0;
 			if(square.getNextRoadMapSquare() == null)
@@ -113,8 +120,8 @@ public class Critter {
 				square=next;
 				square.addCritter(this);
 			}
+		}
 		}	
-	}
 	public void updateDirection()
 	{
 
@@ -156,8 +163,15 @@ public class Critter {
 	}
 
 	public void setSpeed(double speed) {
-		this.speed = Math.max(speed, 0.02);
-		System.out.println("The CurrentCritter Speed = " +this.speed);
+		//double percentCompleted = steps/((distance/this.speed));
+		this.speed = Math.max(speed, 0.01);
+		//speedChanged = true;
+		//distance = (1-percentCompleted);
+		//steps=1;
+		
+		//System.out.println(" percent complete = "+percentCompleted);
+		//System.out.println("CurrentSpeed is "+ this.speed);
+		//System.out.println("distance left is "+distance);
 	}
 
 	public double getxPosition() {

@@ -3,7 +3,7 @@ package tower;
 public class IceTower extends Tower {
 	private static final double damage = 0;
 	private static final double range = 2;
-	private static final double rateOfFire = 1.5;
+	private static final double rateOfFire = 1;
 	private static final double slowingAbility = 2;
 	public static final int cost = 100;
 	private static final boolean groundShootingAbility = false;

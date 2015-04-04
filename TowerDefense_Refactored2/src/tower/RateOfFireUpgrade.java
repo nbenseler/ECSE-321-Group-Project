@@ -15,7 +15,7 @@ public class RateOfFireUpgrade extends UpgradeDecorator {
 	
 	@Override
 	public double getRateOfFire() {
-		return decoratee.getRateOfFire()/rateOfFireMultiplyer;
+		return decoratee.getRateOfFire()*rateOfFireMultiplyer;
 	}
 
 

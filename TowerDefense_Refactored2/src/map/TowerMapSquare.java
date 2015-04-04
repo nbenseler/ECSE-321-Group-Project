@@ -41,7 +41,7 @@ public class TowerMapSquare extends MapSquare implements IMapSquareObserver {
 	}
 
 	public void attackCritters() {
-		if (System.currentTimeMillis() - lastShootingTime > tower.getRateOfFire()*1000) {
+		if (System.currentTimeMillis() - lastShootingTime > (1/tower.getRateOfFire())*1000) {
 			if (!critterList.isEmpty()) {
 				if (tower.isIceShootingAbility()) {
 					critterList.get(0).setSpeed(critterList.get(0).getSpeed() / tower.getSlowingAbility());

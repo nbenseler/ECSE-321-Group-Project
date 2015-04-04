@@ -22,6 +22,8 @@ public class GameController {
 	private MapSquare[][] mapSquares;
 	private ArrayList<RoadMapSquare> roadMapSquareList;
 	private ArrayList<TowerMapSquare> towerMapSquareList;
+	private int horizontalSizeOfSquares;
+	private int verticalSizeOfSquares;
 
 	private static GameController uniqueInstance;
 
@@ -51,6 +53,12 @@ public class GameController {
 			this.towerMapSquareList.add((TowerMapSquare) mapSquares[xPosition][yPosition]);
 			this.addIMapSquareObservers(xPosition, yPosition);
 		}
+	}
+	
+	public void setHorizontalAndVerticalSizeOfSquares(int horizontal, int vertical)
+	{
+		this.horizontalSizeOfSquares = horizontal;
+		this.verticalSizeOfSquares = vertical;
 	}
 
 	public void upgradeTower(String type, int xPosition, int yPosition) {
@@ -154,24 +162,28 @@ public class GameController {
 			if(critter.isMoveRight())
 			{
 				critter.setxPostion(critter.getxPosition()+critter.getSpeed());
+				//System.out.println("newest x position = "+critter.getxPosition());
 			}
 			else if(critter.isMoveLeft())
 			{
 				critter.setxPostion(critter.getxPosition()-critter.getSpeed());
+				//System.out.println("newest x position = "+critter.getxPosition());
 			}
 			else if(critter.isMoveUp())
 			{
 				critter.setyPosition(critter.getyPosition()+critter.getSpeed());
+				//System.out.println("newest y position = "+critter.getyPosition());
 			}
 			else if (critter.isMoveDown())
 			{
 				critter.setyPosition(critter.getyPosition()-critter.getSpeed());
+				//System.out.println("newest y position = "+critter.getyPosition());
 			}
 		}
 
 		if (this.numberOfCrittersInThisWave == 0)
 		{
-			if (System.currentTimeMillis() - timeOfGameStart > 5000)
+			if (System.currentTimeMillis() - timeOfGameStart > 7000)
 			{
 				timeOfLastCritter = System.currentTimeMillis();
 				RoadMapSquare start = roadMapSquareList.get(0);
@@ -189,7 +201,7 @@ public class GameController {
 				numberOfCrittersInThisWave = 0;
 			}
 		}
-		else if (System.currentTimeMillis() - timeOfLastCritter > 20000 / waveMultiplier)
+		else if (System.currentTimeMillis() - timeOfLastCritter > 1000 / waveMultiplier)
 		{
 			if (numberOfCrittersInThisWave % 2 == 0)
 			{
