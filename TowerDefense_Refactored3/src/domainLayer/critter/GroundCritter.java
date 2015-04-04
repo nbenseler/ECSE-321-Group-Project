@@ -12,7 +12,7 @@ public class GroundCritter extends Critter {
 		c = Color.RED;
 		speed = 0.0625;
 		radius = 0.5;
-		damage = 1;
+		damage = 2;
 		healthPoints = 25;
 		monetaryValue = 15;
 	}

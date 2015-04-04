@@ -197,7 +197,7 @@ public class GameController {
 		}
 		else if (System.currentTimeMillis() - timeOfLastCritter > 1000 / waveMultiplier)
 		{
-			/*
+			
 			if (numberOfCrittersInThisWave % 2 == 0)
 			{
 				timeOfLastCritter = System.currentTimeMillis();
@@ -206,15 +206,15 @@ public class GameController {
 				critterList.add(newAerialCritter);
 				numberOfCrittersInThisWave++;
 			}
-			*/
-			//else
-			//{
+			
+			else
+			{
 				timeOfLastCritter = System.currentTimeMillis();
 				RoadMapSquare start = roadMapSquareList.get(0);
 				GroundCritter newGroundCritter = new GroundCritter(start);
 				critterList.add(newGroundCritter);
 				numberOfCrittersInThisWave++;
-			//}
+			}
 
 		}
 		for (TowerMapSquare a: towerMapSquareList)

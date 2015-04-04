@@ -13,6 +13,7 @@ public class AttackFurthestCritter implements IAttackStrategy {
 		for (Critter critter : critterList) {
 			if (critter.getSquare().getPositionInRoad() > furthestCritterPosition) {
 				furthestCritterSoFar = critter;
+				furthestCritterPosition = critter.getSquare().getPositionInRoad();
 			}
 		}
 		return furthestCritterSoFar;

@@ -106,6 +106,10 @@ public class Critter {
 		}	
 	}
 
+	public int getDamage() {
+		return damage;
+	}
+
 	public void updateDirection()
 	{
 

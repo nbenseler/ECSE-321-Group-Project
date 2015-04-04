@@ -6,7 +6,9 @@ import java.util.ListIterator;
 import domainLayer.critter.Critter;
 import domainLayer.towers.ITower;
 import domainLayer.towers.TowerFactory;
+import domainLayer.towers.strategys.AttackFastest;
 import domainLayer.towers.strategys.AttackFurthestCritter;
+import domainLayer.towers.strategys.AttackStrongest;
 import domainLayer.towers.strategys.IAttackStrategy;
 import domainLayer.towers.upgrades.UpgradeFactory;
 

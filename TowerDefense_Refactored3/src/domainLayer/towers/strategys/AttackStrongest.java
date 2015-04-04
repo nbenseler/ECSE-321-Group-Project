@@ -13,11 +13,12 @@ public class AttackStrongest implements IAttackStrategy {
 		for (Critter critter : critterList) {
 			if (critter.getHealthPoints() > highestCritterStrength) {
 				strongestCritterSoFar = critter;
-				highestCritterStrength = strongestCritterSoFar.getHealthPoints();
+				highestCritterStrength = critter.getHealthPoints();
 			}
-			else if (critter.getHealthPoints() == highestCritterStrength) {
+			else if (critter.getHealthPoints() == highestCritterStrength) {		
 				if (critter.getSquare().getPositionInRoad() > strongestCritterSoFar.getSquare().getPositionInRoad()) {
 					strongestCritterSoFar = critter;
+					highestCritterStrength = critter.getHealthPoints();		
 				}
 			}
 		}

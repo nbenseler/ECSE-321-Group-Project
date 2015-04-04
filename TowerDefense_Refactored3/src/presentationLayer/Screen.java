@@ -22,6 +22,7 @@ import domainLayer.mapSquares.IMapSquareObserver;
 import domainLayer.mapSquares.MapSquare;
 import domainLayer.mapSquares.RoadMapSquare;
 import domainLayer.mapSquares.TowerMapSquare;
+import domainLayer.player.IPlayerObserver;
 import domainLayer.player.Player;
 import domainLayer.towers.AerialTower;
 import domainLayer.towers.CompositeTower;
@@ -35,7 +36,7 @@ import domainLayer.towers.upgrades.RateOfFireUpgrade;
 import domainLayer.towers.upgrades.UpgradeFactory;
 
 
-public class Screen extends JPanel implements Runnable{						//this extends the JPanel, and implements Runnable - meaning it calls the run method
+public class Screen extends JPanel implements Runnable, IPlayerObserver {						//this extends the JPanel, and implements Runnable - meaning it calls the run method
 	// this class will be the central class for the game
 	Thread thread = new Thread(this);
 
@@ -66,7 +67,10 @@ public class Screen extends JPanel implements Runnable{						//this extends the 
 	private int verticalSizeOfSqures;	// this variable defines the height of one square on the map
 	private ArrayList<Integer> roadSquares = new ArrayList<>();	// this arrayList keeps track of where the user wanted to have the road
 	private int frameWidth;				// this variable saves the users computer screen width
-	private int frameHeight;			// this variable saves the users computer screen height
+	private int frameHeight;			// this variable saves the users computer screen height\
+	private int money;
+	private int lives;
+	private int level;
 
 	private String validity = "";		// this string will be changed and used to print whether or not a map is valid
 	private ArrayList<Integer> convertedRoute = new ArrayList<Integer>();
@@ -80,13 +84,14 @@ public class Screen extends JPanel implements Runnable{						//this extends the 
 
 	public Screen(Frame frame, int numberOfColumns, int numberOfRows)
 	{
+		player = Player.getUniqueInstance();
 		this.numberOfColumns = numberOfColumns;		// sets the number of columns to that specified by the user
 		this.numberOfRows = numberOfRows;		// sets the number of rows to that specified by the user
 		namePopUpWindow.setVisible(mapNameViewable);
 		this.frame = frame;
 		thread.start();					// runs the run method
 		gameController = GameController.getInstance();
-		player = Player.getUniqueInstance();
+
 	}
 
 	public void paintComponent (Graphics gr)		// this is what updates the screen when it repaints
@@ -238,9 +243,9 @@ public class Screen extends JPanel implements Runnable{						//this extends the 
 				}
 			// these are the texts on the screen
 			gr.drawRect(horizontalSizeOfSqures, (int)((numberOfRows+1.25)*verticalSizeOfSqures),  (int)(1.5*horizontalSizeOfSqures),verticalSizeOfSqures);
-			gr.drawString("Money:  " + Player.getUniqueInstance().getMoney(), horizontalSizeOfSqures+2, (int)((numberOfRows+1.25)*verticalSizeOfSqures)+13);
+			gr.drawString("Money:  " + money, horizontalSizeOfSqures+2, (int)((numberOfRows+1.25)*verticalSizeOfSqures)+13);
 			gr.drawRect(horizontalSizeOfSqures, (int)((numberOfRows+2.5)*verticalSizeOfSqures),  (int)(1.5*horizontalSizeOfSqures),verticalSizeOfSqures);
-			gr.drawString("Lives: " + Player.getUniqueInstance().getLives(), horizontalSizeOfSqures+2, (int)((numberOfRows+2.5)*verticalSizeOfSqures)+13);
+			gr.drawString("Lives: " + lives, horizontalSizeOfSqures+2, (int)((numberOfRows+2.5)*verticalSizeOfSqures)+13);
 			gr.setFont(gr.getFont().deriveFont(18, 15));			
 
 			for (int x = 0; x < 2; x++)			// this draws the boxes for the towers
@@ -251,7 +256,7 @@ public class Screen extends JPanel implements Runnable{						//this extends the 
 				}
 			}
 			gr.drawString("Towers:", (int)(horizontalSizeOfSqures*3.5), (int)((numberOfRows+1.4)*verticalSizeOfSqures)-1);
-			gr.drawString("LEVEL:"+Player.getUniqueInstance().getLevel(), (int)(horizontalSizeOfSqures*numberOfColumns)-(2*horizontalSizeOfSqures), (int)((numberOfRows+1.4)*verticalSizeOfSqures)-1);
+			gr.drawString("LEVEL:"+ level, (int)(horizontalSizeOfSqures*numberOfColumns)-(2*horizontalSizeOfSqures), (int)((numberOfRows+1.4)*verticalSizeOfSqures)-1);
 
 			gameController.startWave();
 
@@ -286,8 +291,8 @@ public class Screen extends JPanel implements Runnable{						//this extends the 
 
 	public void run()
 	{		
-		Player p = Player.getUniqueInstance();
-		p.setLevel(1);
+		
+		player.setPlayerObserver(this);
 		scene = 0;
 		importMaps();
 		this.frame.addMouseListener (new MouseHandler(this));
@@ -398,19 +403,19 @@ public class Screen extends JPanel implements Runnable{						//this extends the 
 
 							if (gameController.getMapSquares()[convertedX][convertedY] == null)
 							{
-								if (groundTowerSelected && player.getMoney() >= GroundTower.cost)
+								if (groundTowerSelected && money >= GroundTower.cost)
 								{
 									gameController.addTower("groundTower", convertedX, convertedY);
 								}
-								else if(aerialTowerSelected && player.getMoney() >= AerialTower.cost)
+								else if(aerialTowerSelected && money >= AerialTower.cost)
 								{
 									gameController.addTower("aerialTower", convertedX, convertedY);
 								}
-								else if (iceTowerSelected && player.getMoney() >= IceTower.cost)
+								else if (iceTowerSelected && money >= IceTower.cost)
 								{
 									gameController.addTower("iceTower", convertedX, convertedY);
 								}
-								else if (compositeTowerSelected && player.getMoney() >= CompositeTower.cost)
+								else if (compositeTowerSelected && money >= CompositeTower.cost)
 								{
 									// t1 = tfactory.newTower("compositetower");						// **BRENNAN**
 								}
@@ -537,13 +542,13 @@ public class Screen extends JPanel implements Runnable{						//this extends the 
 				isValid();	// f checks validity of map
 			}
 			
-			if(scene==4 && towerSelectedForUpgradeOrSale && player.getMoney()>=RateOfFireUpgrade.cost)
+			if(scene==4 && towerSelectedForUpgradeOrSale && money>=RateOfFireUpgrade.cost)
 			{
 				System.out.println("Towers initial frequency of fire = "+ ((TowerMapSquare)(gameController.getMapSquares()[towerSelectedForUpgradeOrSaleX][towerSelectedForUpgradeOrSaleY])).getTower().getRateOfFire());
 				gameController.upgradeTower("rateOfFire", towerSelectedForUpgradeOrSaleX, towerSelectedForUpgradeOrSaleY);
 				System.out.println("Your TOWER has been rate of Fire upgraded at position ("+towerSelectedForUpgradeOrSaleX+","+towerSelectedForUpgradeOrSaleY+")");
 				System.out.println("Towers New rateOfFire = "+ ((TowerMapSquare)(gameController.getMapSquares()[towerSelectedForUpgradeOrSaleX][towerSelectedForUpgradeOrSaleY])).getTower().getRateOfFire());
-				player.setMoney(player.getMoney()- RateOfFireUpgrade.cost);
+				player.setMoney(money - RateOfFireUpgrade.cost);
 			}
 		}
 
@@ -697,24 +702,24 @@ public class Screen extends JPanel implements Runnable{						//this extends the 
 		}
 
 		public void keyD() {
-			if(scene==4 && towerSelectedForUpgradeOrSale && player.getMoney()>=DamageUpgrade.cost)
+			if(scene==4 && towerSelectedForUpgradeOrSale && money>=DamageUpgrade.cost)
 			{
 				System.out.println("Towers initial damage = "+ ((TowerMapSquare)(gameController.getMapSquares()[towerSelectedForUpgradeOrSaleX][towerSelectedForUpgradeOrSaleY])).getTower().getDamage());
 				gameController.upgradeTower("damage", towerSelectedForUpgradeOrSaleX, towerSelectedForUpgradeOrSaleY);
 				System.out.println("Your TOWER has been damamge upgraded at position ("+towerSelectedForUpgradeOrSaleX+","+towerSelectedForUpgradeOrSaleY+")");
 				System.out.println("Towers New damage = "+ ((TowerMapSquare)(gameController.getMapSquares()[towerSelectedForUpgradeOrSaleX][towerSelectedForUpgradeOrSaleY])).getTower().getDamage());
-				player.setMoney(player.getMoney()- DamageUpgrade.cost);
+				player.setMoney(money- DamageUpgrade.cost);
 			}
 		}
 
 		public void keyR() {
-			if(scene==4 && towerSelectedForUpgradeOrSale && player.getMoney()>=RangeUpgrade.cost)
+			if(scene==4 && towerSelectedForUpgradeOrSale && money >=RangeUpgrade.cost)
 			{
 				System.out.println("Towers initial range = "+ ((TowerMapSquare)(gameController.getMapSquares()[towerSelectedForUpgradeOrSaleX][towerSelectedForUpgradeOrSaleY])).getTower().getRange());
 				gameController.upgradeTower("range", towerSelectedForUpgradeOrSaleX, towerSelectedForUpgradeOrSaleY);
 				System.out.println("Your TOWER has been range upgraded at position ("+towerSelectedForUpgradeOrSaleX+","+towerSelectedForUpgradeOrSaleY+")");
 				System.out.println("Towers New range = "+ ((TowerMapSquare)(gameController.getMapSquares()[towerSelectedForUpgradeOrSaleX][towerSelectedForUpgradeOrSaleY])).getTower().getRange());
-				player.setMoney(player.getMoney()- RangeUpgrade.cost);
+				player.setMoney(money - RangeUpgrade.cost);
 			}
 		}
 		
@@ -836,5 +841,12 @@ public class Screen extends JPanel implements Runnable{						//this extends the 
 		{
 			gameController.addRoadMapSquares(conRoute, numberOfColumns, numberOfRows);
 		}
+	}
+
+	@Override
+	public void updateLivesMoneyLevel() {
+		level = player.getLevel();
+		lives = player.getLives();
+		money = player.getMoney();
 	}
 }

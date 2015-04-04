@@ -12,7 +12,7 @@ public class AerialCritter extends Critter {
 		speed = 0.05;
 		radius = 0.6;
 		distance = 0.20;
-		damage = 2;
+		damage = 5;
 		healthPoints = 35;
 		monetaryValue = 20;
 	}
