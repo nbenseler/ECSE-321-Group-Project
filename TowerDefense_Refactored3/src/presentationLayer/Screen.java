@@ -27,27 +27,19 @@ import domainLayer.towers.upgrades.RangeUpgrade;
 import domainLayer.towers.upgrades.RateOfFireUpgrade;
 
 
-public class Screen extends JPanel implements Runnable, IPlayerObserver {						//this extends the JPanel, and implements Runnable - meaning it calls the run method
+public class Screen extends JPanel implements Runnable, IPlayerObserver {	 					//this extends the JPanel, and implements Runnable - meaning it calls the run method
 	// this class will be the central class for the game
 	Thread thread = new Thread(this);
 
-	Frame frame;
-	public int scene;					// the scene defines what screen you are on (EX. main menu, map creator...)
-	MapNameFrame namePopUpWindow = new MapNameFrame("hi");
+	private Frame frame;
+	private int scene;					// the scene defines what screen you are on (EX. main menu, map creator...)
+	private MapNameFrame namePopUpWindow = new MapNameFrame("hi");
 	private static boolean mapNameViewable = false;
 	private static String mapNameText = "";
 
-	public static void setMapNameViewable(boolean newMapNameViewable) {
-		mapNameViewable = newMapNameViewable;
-	}
-
-	public static void setMapNameText(String newMapNameText) {
-		mapNameText = newMapNameText;
-	}
-
-	public int hand = 0;				// this hand is used for the mouse clicking detection
-	public int XPosOfCursor = 0;		// this variable represents the X position of the cursor on the screen	
-	public int YPosOfCursor = 0;		// this variable represents the Y position of the cursor on the screen
+	private int hand = 0;				// this hand is used for the mouse clicking detection
+	private int xPositionOfCursor = 0;		// this variable represents the X position of the cursor on the screen	
+	private int yPositionOfCursor = 0;		// this variable represents the Y position of the cursor on the screen
 	private boolean groundTowerSelected = false;
 	private boolean aerialTowerSelected = false;
 	private boolean iceTowerSelected = false;
@@ -72,6 +64,14 @@ public class Screen extends JPanel implements Runnable, IPlayerObserver {						/
 	private int towerSelectedForUpgradeOrSaleX;
 	private int towerSelectedForUpgradeOrSaleY;
 	private boolean towerSelectedForUpgradeOrSale;
+	
+	public static void setMapNameViewable(boolean newMapNameViewable) {
+		mapNameViewable = newMapNameViewable;
+	}
+
+	public static void setMapNameText(String newMapNameText) {
+		mapNameText = newMapNameText;
+	}
 
 	public Screen(Frame frame, int numberOfColumns, int numberOfRows)
 	{
@@ -333,11 +333,11 @@ public class Screen extends JPanel implements Runnable, IPlayerObserver {						/
 
 	public class MouseHeld					// this class checks to see if the mouse is held
 	{
-		boolean mouseDown = false;			// change when mouse is used
+		private boolean mouseDown = false;			// change when mouse is used
 
 		public void mouseMoved(MouseEvent e) {
-			XPosOfCursor = e.getXOnScreen();
-			YPosOfCursor = e.getYOnScreen();
+			xPositionOfCursor = e.getXOnScreen();
+			yPositionOfCursor = e.getYOnScreen();
 
 		}
 

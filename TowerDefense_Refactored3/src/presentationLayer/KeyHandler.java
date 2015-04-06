@@ -98,11 +98,16 @@ public class KeyHandler implements KeyListener{			// this class takes in and int
 
 	}
 
+	@Override
 	public void keyReleased(KeyEvent e) {
+		// TODO Auto-generated method stub
 		
 	}
 
+	@Override
 	public void keyTyped(KeyEvent e) {
+		// TODO Auto-generated method stub
 		
 	}
+
 }
